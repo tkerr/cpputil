@@ -67,7 +67,7 @@ public:
      * @brief
      * Empties the FIFO by clearing the count and reseting the head and tail pointers.
      */
-    void Clear(void);
+    void clear(void);
 
     /**
      * @brief
@@ -75,7 +75,7 @@ public:
      *
      * @return The number of bytes in the FIFO.
      */
-    uint16_t Count(void);
+    uint16_t count(void);
 
     /**
      * @brief
@@ -83,7 +83,7 @@ public:
      *
      * @return The number of available bytes in the FIFO.
      */
-    uint16_t Available(void);
+    uint16_t available(void);
 
     /**
      * @brief
@@ -97,7 +97,7 @@ public:
      * @param count The number of bytes to add.
      * @return The number of bytes added to the FIFO.
      */
-    uint16_t Add(const uint8_t* source, uint16_t count);
+    uint16_t add(const uint8_t* source, uint16_t count);
 
     /**
      * @brief
@@ -108,7 +108,7 @@ public:
      * @param max The maximum number of bytes to remove from the FIFO.
      * @return The number of bytes removed from the FIFO.
      */
-    uint16_t Remove(uint8_t* dest, uint16_t max);
+    uint16_t remove(uint8_t* dest, uint16_t max);
     
     /**
      * @brief
@@ -120,7 +120,7 @@ public:
      * @param max The maximum number of bytes to retrieve from the FIFO.
      * @return The number of bytes retrieved from the FIFO.
      */
-    uint16_t Peek(uint8_t* dest, uint16_t max);
+    uint16_t peek(uint8_t* dest, uint16_t max);
 
 protected:
 

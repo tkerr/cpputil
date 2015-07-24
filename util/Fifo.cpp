@@ -69,9 +69,9 @@ Fifo::Fifo(uint8_t* buffer, uint16_t size)
 
 
 /**************************************
- * Fifo::Clear
+ * Fifo::clear
  **************************************/
-void Fifo::Clear(void)
+void Fifo::clear(void)
 {
     mHead = mBuffer;
     mTail = mBuffer;
@@ -80,34 +80,34 @@ void Fifo::Clear(void)
 
 
 /**************************************
- * Fifo::Count
+ * Fifo::count
  **************************************/
-uint16_t Fifo::Count(void)
+uint16_t Fifo::count(void)
 {
     return mCount;
 }
 
 
 /**************************************
- * Fifo::Available
+ * Fifo::available
  **************************************/
-uint16_t Fifo::Available(void)
+uint16_t Fifo::available(void)
 {
     return mSize - mCount;
 }
 
 
 /**************************************
- * Fifo::Add
+ * Fifo::add
  **************************************/
-uint16_t Fifo::Add(const uint8_t* source, uint16_t count)
+uint16_t Fifo::add(const uint8_t* source, uint16_t count)
 {
     uint16_t numadded;
 
     // limit the number to add to the available space
-    if (count > Available())
+    if (count > available())
     {
-        count = Available();
+        count = available();
     }
     numadded = count;
     mCount += count;
@@ -124,11 +124,11 @@ uint16_t Fifo::Add(const uint8_t* source, uint16_t count)
 
 
 /**************************************
- * Fifo::Remove
+ * Fifo::remove
  **************************************/
-uint16_t Fifo::Remove(uint8_t* dest, uint16_t max)
+uint16_t Fifo::remove(uint8_t* dest, uint16_t max)
 {
-    uint16_t     numremoved;
+    uint16_t numremoved;
 
     // limit the number removed to the number in the fifo 
     if (max > mCount)
@@ -151,9 +151,9 @@ uint16_t Fifo::Remove(uint8_t* dest, uint16_t max)
 
 
 /**************************************
- * Fifo::Peek
+ * Fifo::peek
  **************************************/
-uint16_t Fifo::Peek(uint8_t* dest, uint16_t max)
+uint16_t Fifo::peek(uint8_t* dest, uint16_t max)
 {
     uint16_t numretrieved;
     uint8_t* localHead = mHead;  // Do not modify FIFO pointers
