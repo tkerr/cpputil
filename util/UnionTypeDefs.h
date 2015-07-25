@@ -50,7 +50,14 @@ typedef union _int32u_t  //!< Union data type for a 32-bit signed integer
     uint8_t b[sizeof(int32_t)];  //!< Unsigned byte array
 } int32u_t;
   
-  
+
+typedef union _int64u_t  //!< Union data type for a 64-bit signed integer
+{
+    int64_t v;                   //!< The composite value
+    uint8_t b[sizeof(int64_t)];  //!< Unsigned byte array
+} int64u_t;
+
+ 
 typedef union _uint16u_t  //!< Union data type for a 16-bit unsigned integer
 {
     uint16_t v;                    //!< The composite value
@@ -64,5 +71,11 @@ typedef union _uint32u_t  //!< Union data type for a 32-bit unsigned integer
     uint8_t  b[sizeof(uint32_t)];  //!< Unsigned byte array
 } uint32u_t;
 
+
+typedef union _uint64u_t  //!< Union data type for a 64-bit unsigned integer
+{
+    uint64_t v;                    //!< The composite value
+    uint8_t  b[sizeof(uint64_t)];  //!< Unsigned byte array
+} uint64u_t;
 
 #endif // _UNION_TYPE_DEFS_H
