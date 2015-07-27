@@ -7,6 +7,9 @@
  *
  * Modification History:
  *
+ * 07/26/2015 - Tom Kerr
+ * Doxygen updates.
+ *
  * 07/24/2015 - Tom Kerr
  * Created.
  ******************************************************************************/
@@ -42,7 +45,7 @@
  ******************************************************************************/
 
 /**
- * @class
+ * @class Fifo
  * This class implements a simple FIFO that provides first in, first out 
  * access to a byte array.
  *

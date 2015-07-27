@@ -7,6 +7,9 @@
  * 
  * Modification History:
  *
+ * 07/26/2015 - Tom Kerr
+ * Doxygen updates.
+ *
  * 07/24/2015 - Tom Kerr
  * Created.
  ******************************************************************************/
@@ -41,7 +44,7 @@
  ******************************************************************************/
 
  /**
- * @class
+ * @class Countdown
  * The Countdown class implements a simple countdown timer.
  *
  * The class is designed for the Arduino and uses elements of the Arduino

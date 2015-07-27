@@ -7,6 +7,9 @@
  *
  * Modification History:
  *
+ * 07/26/2015 - Tom Kerr
+ * Doxygen updates.
+ *
  * 07/24/2015 - Tom Kerr
  * Created.
  ******************************************************************************/
@@ -81,7 +84,7 @@ enum Adc328Channel
  ******************************************************************************/
 
 /**
- * @class
+ * @class Adc328
  * Analog-to-digital converter (ADC) class for the Atmel AVR ATmega328p 
  * processor. Provides direct control of the ADC. Conversion results are
  * filtered through a median filter.

@@ -7,6 +7,9 @@
  *
  * Modification History:
  *
+ * 07/26/2015 - Tom Kerr
+ * Doxygen updates.
+ *
  * 07/24/2015 - Tom Kerr
  * Created.
  ******************************************************************************/
@@ -121,7 +124,7 @@ uint16_t Adc328::convert(Adc328Channel channel)
  **************************************/
 uint16_t Adc328::medianConvert(Adc328Channel channel)
 {
-    uint16_t adcArray[ADC328_FILTER_SIZE];  //!< Array of ADC values for median filter
+    uint16_t adcArray[ADC328_FILTER_SIZE];  // Array of ADC values for median filter
     
     // Set the ADC channel.
     setChannel(channel);
