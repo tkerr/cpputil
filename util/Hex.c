@@ -7,6 +7,9 @@
  *
  * Modification History:
  *
+ * 08/23/2015 - Tom Kerr
+ * Refactored the binary to hex conversion functions.
+ *
  * 07/26/2015 - Tom Kerr
  * Created.
  ******************************************************************************/
@@ -35,6 +38,7 @@
 /******************************************************************************
  * Forward references.
  ******************************************************************************/
+static void     HEX_byteToHex(uint8_t bin, char* hex);  //!< Convert one byte to hex
 static uint64_t HEX_doConvert(const char* hex, uint8_t len);  //!< Perform conversion
 static int      HEX_strlen(const char* str);  //!< Local implementation of strlen()
 static uint8_t  HEX_toBin(char c);            //!< Convert one hex digit to binary
@@ -43,7 +47,7 @@ static uint8_t  HEX_toBin(char c);            //!< Convert one hex digit to bina
 /******************************************************************************
  * Local definitions.
  ******************************************************************************/
-#define BIN2ASC(x) if (x < 10) {x += '0';} else {x = (x - 10) + 'A';}
+#define BIN2ASC(a, b) b = (a < 10) ? a + '0' : (a - 10) + 'A';
 
 
 /******************************************************************************
@@ -57,44 +61,70 @@ static uint8_t  HEX_toBin(char c);            //!< Convert one hex digit to bina
 
 
 /**************************************
- * HEX_BinaryToHex
+ * HEX_Uint8ToHex
  **************************************/
-int HEX_BinaryToHex(uint64_t bin, char* ascii, int minSize)
+char* HEX_Uint8ToHex(uint8_t bin, char* hex)
 {
-    int size = 0;                     // Size of formatted string
-    int pos = sizeof(uint64_t) * 2;   // Hex digit position
-    int hasDigits = 0;
-    int i;
-    uint64u_t qwBin;
-    
-    qwBin.v = bin;
-    
-    if (minSize < 1) minSize = 1;
-    
-    for (i = sizeof(uint64_t)-1; i >= 0; i--)
-    {
-        char c = (qwBin.b[i] & 0xF0) >> 4;
-        if ((c > 0) || hasDigits || (pos <= minSize))
-        {
-            BIN2ASC(c)
-            ascii[size++] = c;
-            hasDigits = 1;
-        }
-        pos--;
-        
-        c = (qwBin.b[i] & 0x0F);
-        if ((c > 0) || hasDigits || (pos <= minSize))
-        {
-            BIN2ASC(c)
-            ascii[size++] = c;
-            hasDigits = 1;
-        }
-        pos--;
-        
-        ascii[size] = '\0';
-    }
+    HEX_byteToHex(bin, hex);
+    hex[2] = '\0';
+    return hex;
+}
 
-    return size;
+
+/**************************************
+ * HEX_Uint16ToHex
+ **************************************/
+char* HEX_Uint16ToHex(uint16_t bin, char* hex)
+{
+    uint16u_t uBin;
+    uint8_t i;
+    
+    uBin.v = bin;
+    
+    for (i=0; i < sizeof(uint16_t); i++)
+    {
+        HEX_byteToHex(uBin.b[(sizeof(uint16_t) - 1) - i], &hex[i<<1]);
+    }
+    hex[2*sizeof(uint16_t)] = '\0';
+    return hex;
+}
+
+
+/**************************************
+ * HEX_Uint32ToHex
+ **************************************/
+char* HEX_Uint32ToHex(uint32_t bin, char* hex)
+{
+    uint32u_t uBin;
+    uint8_t i;
+    
+    uBin.v = bin;
+    
+    for (i=0; i < sizeof(uint32_t); i++)
+    {
+        HEX_byteToHex(uBin.b[(sizeof(uint32_t) - 1) - i], &hex[i<<1]);
+    }
+    hex[2*sizeof(uint32_t)] = '\0';
+    return hex;
+}
+
+
+/**************************************
+ * HEX_Uint64ToHex
+ **************************************/
+char* HEX_Uint64ToHex(uint64_t bin, char* hex)
+{
+    uint64u_t uBin;
+    uint8_t i;
+    
+    uBin.v = bin;
+    
+    for (i=0; i < sizeof(uint64_t); i++)
+    {
+        HEX_byteToHex(uBin.b[(sizeof(uint64_t) - 1) - i], &hex[i<<1]);
+    }
+    hex[2*sizeof(uint64_t)] = '\0';
+    return hex;
 }
 
 
@@ -161,6 +191,15 @@ uint64_t HEX_HexToUint64(const char* hex)
 /******************************************************************************
  * Private functions.
  ******************************************************************************/
+ 
+static void HEX_byteToHex(uint8_t bin, char* hex)
+{
+    uint8_t c = (bin >> 4) & 0x0F;
+    BIN2ASC(c, hex[0])
+    c = bin & 0x0F;
+    BIN2ASC(c, hex[1])
+}
+
 
 /**************************************
  * HEX_doConvert

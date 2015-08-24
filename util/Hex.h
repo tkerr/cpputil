@@ -7,6 +7,9 @@
  *
  * Modification History:
  *
+ * 08/23/2015 - Tom Kerr
+ * Refactored the binary to hex conversion functions.
+ *
  * 07/26/2015 - Tom Kerr
  * Created.
  ******************************************************************************/
@@ -47,30 +50,65 @@
 extern "C" {
 #endif
 
+
 /**
  * @brief
- * Convert a binary number to a hexadecimal ASCII string.
+ * Convert an 8-bit numeric value to a hexadecimal ASCII string.
  *
- * Converts a binary number up to 64 bits to a BCD array.
- * Each byte in the BCD array contains two BCD digits.
- * Note that bcd[0] contains the least significant digits.
+ * Equivalent to sprintf(hex, "%02X", bin);
  *
- * This function assumes that the bcd array is at least 10 bytes in size,
- * regardless of the size of the binary value passed in.  This accounts
- * for the maximum value of 2^64 = 18,446,744,073,709,551,616 which requires
- * an array of 10 bytes.
+ * @param bin The input value to convert.
  *
- * @param bin The binary value to convert.
+ * @param hex The converted hex string.
  *
- * @param ascii Pointer to an ASCII string buffer to receive the result.
- * The maximum buffer size needed is 17 bytes for a result of 2^64 - 1 = 0xFFFFFFFFFFFFFFFF.
- *
- * @param minSize The minimum size of the ASCII hex string.  The function will
- * fill with leading zeroes if needed.  Range is 1-16.
- *
- * @return The size of the ASCII hex string.
+ * @return Pointer to the converted hex string.
  */
-int HEX_BinaryToHex(uint64_t bin, char* ascii, int minSize);
+char* HEX_Uint8ToHex(uint8_t bin, char* hex);
+
+
+/**
+ * @brief
+ * Convert a 16-bit numeric value to a hexadecimal ASCII string.
+ *
+ * Equivalent to sprintf(hex, "%04X", bin);
+ *
+ * @param bin The input value to convert.
+ *
+ * @param hex The converted hex string.
+ *
+ * @return Pointer to the converted hex string.
+ */
+char* HEX_Uint16ToHex(uint16_t bin, char* hex);
+
+
+/**
+ * @brief
+ * Convert a 32-bit numeric value to a hexadecimal ASCII string.
+ *
+ * Equivalent to sprintf(hex, "%08X", bin);
+ *
+ * @param bin The input value to convert.
+ *
+ * @param hex The converted hex string.
+ *
+ * @return Pointer to the converted hex string.
+ */
+char* HEX_Uint32ToHex(uint32_t bin, char* hex);
+
+
+/**
+ * @brief
+ * Convert a 64-bit numeric value to a hexadecimal ASCII string.
+ *
+ * Equivalent to sprintf(hex, "%016X", bin);
+ *
+ * @param bin The input value to convert.
+ *
+ * @param hex The converted hex string.
+ *
+ * @return Pointer to the converted hex string.
+ */
+char* HEX_Uint64ToHex(uint64_t bin, char* hex);
 
 
 /**
