@@ -1,0 +1,10 @@
+sha256.c module test program for the Arduino hardware platform.
+Tested only on the Arduino Uno.
+
+This sketch performs a SHA-256 test against standard NIST test vectors.
+Output is printed and must be inspected against the results documented
+in TestVectors.txt.
+
+Copy the following files into the sketch folder:
+sha256.c
+sha256.h
