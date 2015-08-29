@@ -1,0 +1,7 @@
+hex.c module test program for the Arduino hardware platform.
+Tested only on the Arduino Uno.
+
+Copy the following files into the sketch folder:
+hex.c
+hex.h
+UnionTypeDefs.h

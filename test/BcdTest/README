@@ -1,0 +1,9 @@
+Bcd.c module test program for the Arduino hardware platform.
+Tested only on the Arduino Uno.
+
+Some output may be printed and must be inspected to determine pass/fail.
+
+Copy the following files into the sketch folder:
+Bcd.c
+Bcd.h
+UnionTypeDefs.h
