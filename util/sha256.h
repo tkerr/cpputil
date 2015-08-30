@@ -12,9 +12,9 @@
 *
 * Modification History:
 *
-* 08/21/2015 – Tom Kerr
+* 08/30/2015 – Tom Kerr
 * Obtained from http://bradconte.com/sha256_c and modified for 
-* AVR/Arduino build environment.
+* general embedded systems use.
 *********************************************************************/
 
 #ifndef _SHA256_H

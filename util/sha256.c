@@ -18,9 +18,9 @@
 *
 * Modification History:
 *
-* 08/21/2015 – Tom Kerr
+* 08/30/2015 – Tom Kerr
 * Obtained from http://bradconte.com/sha256_c and modified for 
-* AVR/Arduino build environment.
+* general embedded systems use.
 *********************************************************************/
 
 /*************************** HEADER FILES ***************************/
@@ -38,11 +38,6 @@
 #define EP1(x) (ROTRIGHT(x,6) ^ ROTRIGHT(x,11) ^ ROTRIGHT(x,25))
 #define SIG0(x) (ROTRIGHT(x,7) ^ ROTRIGHT(x,18) ^ ((x) >> 3))
 #define SIG1(x) (ROTRIGHT(x,17) ^ ROTRIGHT(x,19) ^ ((x) >> 10))
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 
 /**************************** VARIABLES *****************************/
@@ -174,6 +169,3 @@ void sha256_final(SHA256_CTX *ctx, uint8_t hash[])
 	}
 }
 
-#ifdef __cplusplus
-}
-#endif
