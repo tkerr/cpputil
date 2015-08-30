@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 08/29/2015 - Tom Kerr
+ * Moved some strings to PROGMEM.
+ *
  * 08/21/2015 - Tom Kerr
  * Initial creation.
  ******************************************************************************/
@@ -46,6 +49,7 @@
  ******************************************************************************/
 #include <ctype.h>
 #include <stdint.h>
+#include <avr/pgmspace.h>
 #include <Wire.h>
 #include "Arduino.h"
 
@@ -82,17 +86,17 @@ void print_hash(uint8_t hash[])
 {
     int  i, j;
     char buf[4];
-    Serial.write("Hash: ");
+    Serial.print(F("Hash: "));
     for (i=0; i < 8; i++)
     {
         for (j=0; j < 4; j++)
         {
             sprintf(buf, "%02X", hash[i*4+j]);
-            Serial.write(buf);
+            Serial.print(buf);
         }
-        Serial.write(" ");
+        Serial.print(" ");
     }
-    Serial.write("\r\n");
+    Serial.println();
 }
 
 
@@ -120,15 +124,14 @@ void loop()
     char text5[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     uint8_t hash[32];
 	
-	Serial.write("Press any key to begin: ");
+	Serial.print(F("Press a key to begin: "));
 	while (!Serial.available()) {}
     Serial.read();
-	Serial.write("\r\n");
+	Serial.println();
 	
 	// Hash one
-    Serial.write("Text: ");
-    Serial.write(text1);
-    Serial.write("\r\n");
+    Serial.print(F("Text: "));
+    Serial.println(text1);
     start = millis();
     sha256_init(&ctx);
     sha256_update(&ctx, (uint8_t*)text1, strlen(text1));
@@ -136,12 +139,11 @@ void loop()
     stop = millis();
     print_hash(hash);
     Serial.print(stop-start);
-    Serial.write(" ms\r\n");
+    Serial.println(F(" ms"));
     
     // Hash two
-    Serial.write("Text: ");
-    Serial.write(text2);
-    Serial.write("\r\n");
+    Serial.print(F("Text: "));
+    Serial.println(text2);
     start = millis();
     sha256_init(&ctx);
     sha256_update(&ctx, (uint8_t*)text2, strlen(text2));
@@ -149,12 +151,11 @@ void loop()
     stop = millis();
     print_hash(hash);
     Serial.print(stop-start);
-    Serial.write(" ms\r\n");
+    Serial.println(F(" ms"));
     
     // Hash three
-    Serial.write("Text: ");
-    Serial.write(text3);
-    Serial.write("\r\n");
+    Serial.print(F("Text: "));
+    Serial.println(text3);
     start = millis();
     sha256_init(&ctx);
     sha256_update(&ctx, (uint8_t*)text3, strlen(text3));
@@ -162,12 +163,11 @@ void loop()
     stop = millis();
     print_hash(hash);
     Serial.print(stop-start);
-    Serial.write(" ms\r\n");
+    Serial.println(F(" ms"));
     
     // Hash four
-    Serial.write("Text: ");
-    Serial.write(text4);
-    Serial.write("\r\n");
+    Serial.print(F("Text: "));
+    Serial.println(text4);
     start = millis();
     sha256_init(&ctx);
     sha256_update(&ctx, (uint8_t*)text4, strlen(text4));
@@ -175,10 +175,10 @@ void loop()
     stop = millis();
     print_hash(hash);
     Serial.print(stop-start);
-    Serial.write(" ms\r\n");
+    Serial.println(F(" ms"));
     
     // Hash five
-    Serial.write("Text: 1 million repetitions of the character 'a'\r\n");
+    Serial.println(F("Text: 1 million repetitions of the character 'a'"));
     uint16_t i = 0;
     start = millis();
     sha256_init(&ctx);
@@ -190,5 +190,5 @@ void loop()
     stop = millis();
     print_hash(hash);
     Serial.print(stop-start);
-    Serial.write(" ms\r\n");
+    Serial.println(F(" ms"));
 }
