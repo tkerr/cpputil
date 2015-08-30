@@ -1,0 +1,12 @@
+crc.c module test program for the Arduino hardware platform.
+Uses the aunit pseudo test framework to execute the tests.
+Tested only on the Arduino Uno.
+
+Copy the following files into the sketch folder:
+crc.c
+crc.h
+aunit.cpp
+aunit.h
+hex.c
+hex.h
+UnionTypeDefs.h
