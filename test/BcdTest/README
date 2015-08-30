@@ -1,4 +1,5 @@
 Bcd.c module test program for the Arduino hardware platform.
+Uses the aunit pseudo test framework to execute the tests.
 Tested only on the Arduino Uno.
 
 Some output may be printed and must be inspected to determine pass/fail.
@@ -6,4 +7,6 @@ Some output may be printed and must be inspected to determine pass/fail.
 Copy the following files into the sketch folder:
 Bcd.c
 Bcd.h
+aunit.cpp
+aunit.h
 UnionTypeDefs.h

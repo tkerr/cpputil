@@ -17,6 +17,10 @@
  *
  * Modification History:
  *
+ * 08/29/2015 - Tom Kerr
+ * Modified to use aunit test structure.
+ * Moved some strings to PROGMEM.
+ *
  * 08/23/2015 - Tom Kerr
  * Initial creation.
  ******************************************************************************/
@@ -26,11 +30,11 @@
  * @brief
  * Arduino Uno hex.c module test program.
  *
- * Contains the setup() and loop() functions for the program.
- * Also contains all necessary test functions.
+ * Contains the setup() and loop() functions for the program.  Also uses the
+ * aunit pseudo test framework to execute the tests.
  *
- * Copy hex.c, hex.h and UnionTypeDefs.h into your sketch folder.  This sketch 
- * tests all functions in the hex.c module.
+ * Copy aunit.cpp, aunit.h, UnionTypeDefs.h, hex.c, and hex.h into your sketch 
+ * folder.  This sketch tests all functions in the hex.c module.
  */
  
 /******************************************************************************
@@ -43,6 +47,7 @@
  ******************************************************************************/
 #include <stdint.h>
 #include <string.h>
+#include <avr/pgmspace.h>
 #include <Wire.h>
 #include "Arduino.h"
 
@@ -50,6 +55,7 @@
 /******************************************************************************
  * Local include files.
  ******************************************************************************/
+#include "aunit.h"
 #include "Hex.h"
 #include "UnionTypeDefs.h"
 
@@ -98,9 +104,9 @@ char testResultAscii[2*sizeof(uint64_t)+1];
 /**************************************
  * CheckString
  **************************************/ 
-int CheckString(const char* expected, const char* actual, size_t size)
+bool CheckString(const char* expected, const char* actual, size_t size)
 {
-    int ok = (strncmp(expected, actual, size) == 0);
+    bool ok = (strncmp(expected, actual, size) == 0);
     return ok;
 }
 
@@ -120,11 +126,10 @@ void ClearTestResult()
  **************************************/ 
 void PrintErrorAscii(const char* expected, const char* actual)
 {
-    Serial.write("Expected: ");
-    Serial.write(expected);
-    Serial.write(" Actual: ");
-    Serial.write(actual);
-    Serial.write("\r\n");
+    Serial.print("Expected: ");
+    Serial.print(expected);
+    Serial.print(" Actual: ");
+    Serial.println(actual);
 }
 
 
@@ -142,35 +147,22 @@ void PrintErrorBinary(uint64_t expected, uint64_t actual)
 
 
 /**************************************
- * PrintPassFail
- **************************************/ 
-void PrintPassFail(int ok)
-{
-    if (ok) Serial.write("PASS\r\n");
-    else Serial.write("FAIL\r\n");
-}
-
-
-/**************************************
  * Test_HEX_Uint8ToHex
  **************************************/ 
 void Test_HEX_Uint8ToHex()
 {
-    int ok = 1;
-    Serial.write("Testing HEX_Uint8ToHex() \r\n");
-    
-    for (int i=0; i < NUM_TEST_VECTORS; i++)
+    Serial.println(F("Testing HEX_Uint8ToHex()"));
+    bool pass = false;
+    int i;
+    for (i=0; i < NUM_TEST_VECTORS; i++)
     {
         ClearTestResult();
         HEX_Uint8ToHex(testVectorsBinary[i], testResultAscii);
-        ok = CheckString(testVectorsAscii[i], testResultAscii, 2*sizeof(uint8_t));
-        if (!ok)
-        {
-            PrintErrorAscii(testVectorsAscii[i], testResultAscii);
-            break;
-        }
+        pass = CheckString(testVectorsAscii[i], testResultAscii, 2*sizeof(uint8_t));
+        TEST_ASSERT_BREAK(pass, i, 1);
     }
-    PrintPassFail(ok);
+    if (!pass) PrintErrorAscii(testVectorsAscii[i], testResultAscii);
+    TEST_ASSERT_PASS(pass);
 }
 
 
@@ -179,9 +171,8 @@ void Test_HEX_Uint8ToHex()
  **************************************/ 
 void Test_HEX_Uint16ToHex()
 {
-    int ok = 1;
-    Serial.write("Testing HEX_Uint16ToHex() \r\n");
-    
+    Serial.println(F("Testing HEX_Uint16ToHex()"));
+    bool pass = false;
     uint16u_t testNum;
     const char testAsc[] = "ABCD";
     char expected[5];
@@ -189,11 +180,11 @@ void Test_HEX_Uint16ToHex()
     // Quick sanity check.
     ClearTestResult();
     HEX_Uint16ToHex(0xABCDu, testResultAscii);
-    ok = CheckString(testAsc, testResultAscii, 2*sizeof(uint16_t));
-    if (!ok)
+    pass = CheckString(testAsc, testResultAscii, 2*sizeof(uint16_t));
+    TEST_ASSERT_FAIL(pass, 1, 0);
+    if (!pass)
     {
         PrintErrorAscii(testAsc, testResultAscii);
-        PrintPassFail(ok);
         return;
     }
     
@@ -210,14 +201,11 @@ void Test_HEX_Uint16ToHex()
         ClearTestResult();
         HEX_Uint16ToHex(testNum.v, testResultAscii);
         
-        ok = CheckString(expected, testResultAscii, 2*sizeof(uint16_t));
-        if (!ok)
-        {
-            PrintErrorAscii(expected, testResultAscii);
-            break;
-        }
+        pass = CheckString(expected, testResultAscii, 2*sizeof(uint16_t));
+        TEST_ASSERT_BREAK(pass, testNum.v, 1);
     }
-    PrintPassFail(ok);
+    if (!pass) PrintErrorAscii(expected, testResultAscii);
+    TEST_ASSERT_PASS(pass);
 }
 
 
@@ -226,9 +214,8 @@ void Test_HEX_Uint16ToHex()
  **************************************/ 
 void Test_HEX_Uint32ToHex()
 {
-    int ok = 1;
-    Serial.write("Testing HEX_Uint32ToHex() \r\n");
-    
+    Serial.println(F("Testing HEX_Uint32ToHex()"));
+    bool pass = false;
     uint32u_t testNum;
     const char testAsc[] = "01234567";
     char expected[9];
@@ -236,11 +223,11 @@ void Test_HEX_Uint32ToHex()
     // Quick sanity check.
     ClearTestResult();
     HEX_Uint32ToHex(0x01234567ul, testResultAscii);
-    ok = CheckString(testAsc, testResultAscii, 2*sizeof(uint32_t));
-    if (!ok)
+    pass = CheckString(testAsc, testResultAscii, 2*sizeof(uint32_t));
+    TEST_ASSERT_FAIL(pass, 1, 0);
+    if (!pass)
     {
         PrintErrorAscii(testAsc, testResultAscii);
-        PrintPassFail(ok);
         return;
     }
     
@@ -264,15 +251,11 @@ void Test_HEX_Uint32ToHex()
         // Perform the test conversion.
         ClearTestResult();
         HEX_Uint32ToHex(testNum.v, testResultAscii);
-        
-        ok = CheckString(expected, testResultAscii, 2*sizeof(uint32_t));
-        if (!ok)
-        {
-            PrintErrorAscii(expected, testResultAscii);
-            break;
-        }
+        pass = CheckString(expected, testResultAscii, 2*sizeof(uint32_t));
+        TEST_ASSERT_BREAK(pass, i, 1);
     }
-    PrintPassFail(ok);
+    if (!pass) PrintErrorAscii(expected, testResultAscii);
+    TEST_ASSERT_PASS(pass);
 }
 
 
@@ -281,9 +264,8 @@ void Test_HEX_Uint32ToHex()
  **************************************/ 
 void Test_HEX_Uint64ToHex()
 {
-    int ok = 1;
-    Serial.write("Testing HEX_Uint64ToHex() \r\n");
-    
+    Serial.println(F("Testing HEX_Uint64ToHex()"));
+    bool pass = false;
     uint64u_t testNum;
     const char testAsc[] = "0123456789ABCDEF";
     char expected[17];
@@ -291,11 +273,11 @@ void Test_HEX_Uint64ToHex()
     // Quick sanity check.
     ClearTestResult();
     HEX_Uint64ToHex(0x0123456789ABCDEFull, testResultAscii);
-    ok = CheckString(testAsc, testResultAscii, 2*sizeof(uint64_t));
-    if (!ok)
+    pass = CheckString(testAsc, testResultAscii, 2*sizeof(uint64_t));
+    TEST_ASSERT_FAIL(pass, 1, 0);
+    if (!pass)
     {
         PrintErrorAscii(testAsc, testResultAscii);
-        PrintPassFail(ok);
         return;
     }
     
@@ -328,14 +310,11 @@ void Test_HEX_Uint64ToHex()
         ClearTestResult();
         HEX_Uint64ToHex(testNum.v, testResultAscii);
         
-        ok = CheckString(expected, testResultAscii, 2*sizeof(uint64_t));
-        if (!ok)
-        {
-            PrintErrorAscii(expected, testResultAscii);
-            break;
-        }
+        pass = CheckString(expected, testResultAscii, 2*sizeof(uint64_t));
+        TEST_ASSERT_BREAK(pass, i, 1);
     }
-    PrintPassFail(ok);
+    if (!pass) PrintErrorAscii(expected, testResultAscii);
+    TEST_ASSERT_PASS(pass);
 }
 
 
@@ -344,21 +323,18 @@ void Test_HEX_Uint64ToHex()
  **************************************/ 
 void Test_HEX_HexToUint8()
 {
-    int ok = 1;
-    Serial.write("Testing HEX_HexToUint8() \r\n");
+    Serial.println(F("Testing HEX_HexToUint8()"));
+    bool pass = false;
     uint8_t actual;
-    
-    for (int i=0; i < NUM_TEST_VECTORS; i++)
+    int i;
+    for (i=0; i < NUM_TEST_VECTORS; i++)
     {
         actual = HEX_HexToUint8(testVectorsAscii[i]);
-        ok = (actual == testVectorsBinary[i]);
-        if (!ok)
-        {
-            PrintErrorBinary(testVectorsBinary[i], actual);
-            break;
-        }
+        pass = (actual == testVectorsBinary[i]);
+        TEST_ASSERT_BREAK(pass, i, 1);
     }
-    PrintPassFail(ok);
+    if (!pass) PrintErrorBinary(testVectorsBinary[i], actual);
+    TEST_ASSERT_PASS(pass);
 }
 
 
@@ -367,9 +343,8 @@ void Test_HEX_HexToUint8()
  **************************************/ 
 void Test_HEX_HexToUint16()
 {
-    int ok = 1;
-    Serial.write("Testing HEX_HexToUint16() \r\n");
-    
+    Serial.println(F("Testing HEX_HexToUint16()"));
+    bool pass = false;
     uint16_t actual;
     uint16_t testNum;
     char testAsc[5] = "ABCD";
@@ -377,11 +352,11 @@ void Test_HEX_HexToUint16()
     // Quick sanity check.
     testNum = 0xABCDu;
     actual = HEX_HexToUint16(testAsc);
-    ok = (actual == testNum);
-    if (!ok)
+    pass = (actual == testNum);
+    TEST_ASSERT_FAIL(pass, 1, 0);
+    if (!pass)
     {
         PrintErrorBinary(testNum, actual);
-        PrintPassFail(ok);
         return;
     }
     
@@ -394,14 +369,11 @@ void Test_HEX_HexToUint16()
         
         // Perform the test conversion.
         actual = HEX_HexToUint16(testAsc);
-        ok = (actual == testNum);
-        if (!ok)
-        {
-            PrintErrorBinary(testNum, actual);
-            break;
-        }
+        pass = (actual == testNum);
+        TEST_ASSERT_BREAK(pass, testNum, 1);
     }
-    PrintPassFail(ok);
+    if (!pass) PrintErrorBinary(testNum, actual);
+    TEST_ASSERT_PASS(pass);
 }
 
 
@@ -410,9 +382,8 @@ void Test_HEX_HexToUint16()
  **************************************/ 
 void Test_HEX_HexToUint32()
 {
-    int ok = 1;
-    Serial.write("Testing HEX_HexToUint32() \r\n");
-    
+    Serial.println(F("Testing HEX_HexToUint32()"));
+    bool pass = false;
     uint32_t actual;
     uint32u_t testNum;
     char testAsc[9] = "87654321";
@@ -420,13 +391,14 @@ void Test_HEX_HexToUint32()
     // Quick sanity check.
     testNum.v = 0x87654321ul;
     actual = HEX_HexToUint32(testAsc);
-    ok = (actual == testNum.v);
-    if (!ok)
+    pass = (actual == testNum.v);
+    TEST_ASSERT_FAIL(pass, 1, 0);
+    if (!pass)
     {
         PrintErrorBinary(testNum.v, actual);
-        PrintPassFail(ok);
         return;
     }
+    
     
     // Check a large number of random combinations.
     for (uint16_t i = 0; i < 10000; i++)
@@ -441,14 +413,11 @@ void Test_HEX_HexToUint32()
         
         // Perform the test conversion.
         actual = HEX_HexToUint32(testAsc);
-        ok = (actual == testNum.v);
-        if (!ok)
-        {
-            PrintErrorBinary(testNum.v, actual);
-            break;
-        }
+        pass = (actual == testNum.v);
+        TEST_ASSERT_BREAK(pass, i, 1);
     }
-    PrintPassFail(ok);
+    if (!pass) PrintErrorBinary(testNum.v, actual);
+    TEST_ASSERT_PASS(pass);
 }
 
 
@@ -457,9 +426,8 @@ void Test_HEX_HexToUint32()
  **************************************/ 
 void Test_HEX_HexToUint64()
 {
-    int ok = 1;
-    Serial.write("Testing HEX_HexToUint64() \r\n");
-    
+    Serial.println(F("Testing HEX_HexToUint64()"));
+    bool pass = false;
     uint64_t actual;
     uint64u_t testNum;
     char testAsc[17] = "FEDCBA9876543210";
@@ -467,11 +435,11 @@ void Test_HEX_HexToUint64()
     // Quick sanity check.
     testNum.v = 0xFEDCBA9876543210ull;
     actual = HEX_HexToUint64(testAsc);
-    ok = (actual == testNum.v);
-    if (!ok)
+    pass = (actual == testNum.v);
+    TEST_ASSERT_FAIL(pass, 1, 0);
+    if (!pass)
     {
         PrintErrorBinary(testNum.v, actual);
-        PrintPassFail(ok);
         return;
     }
     
@@ -492,14 +460,11 @@ void Test_HEX_HexToUint64()
         
         // Perform the test conversion.
         actual = HEX_HexToUint64(testAsc);
-        ok = (actual == testNum.v);
-        if (!ok)
-        {
-            PrintErrorBinary(testNum.v, actual);
-            break;
-        }
+        pass = (actual == testNum.v);
+        TEST_ASSERT_BREAK(pass, i, 1);
     }
-    PrintPassFail(ok);
+    if (!pass) PrintErrorBinary(testNum.v, actual);
+    TEST_ASSERT_PASS(pass);
 }
 
 
@@ -517,10 +482,7 @@ void setup()
  **************************************/ 
 void loop()
 {
-    Serial.write("Press any key to begin: ");
-    while (!Serial.available()) {}
-    Serial.read();
-    Serial.write("\r\n");
+    TEST_WAIT();
     
     Test_HEX_Uint8ToHex();
     Test_HEX_Uint16ToHex();

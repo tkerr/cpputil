@@ -1,16 +1,16 @@
 ##############################################################################
-# hexText.mak
+# FifoTest.mak
 #
-# MAKEFILE for Arduino Uno hex module test application.
+# MAKEFILE for Arduino Uno Fifo.cpp module test application.
 # Uses OpenWatcom make utility to build a test application for  
 # the Ardunio UNO based on the Atmel AVR ATmega328p processor.
 #
 # Designed for use by the WiTAQ build environment.
 #
-# The hex file is named hexTest_<CPU>_<VARIANT> where CPU is the target
+# The hex file is named FifoTest_<CPU>_<VARIANT> where CPU is the target
 # processor, and VARIANT is the Arduino hardware variant.
 #
-# General build command: wmake [options] /f hexText.mak [targets]
+# General build command: wmake [options] /f FifoTest.mak [targets]
 #
 # Modification History:
 #
@@ -23,7 +23,7 @@
 .EXTENSIONS:.o .c .cpp .ino # Assign intrinsic extensions
 
 # Macros for defining the build target.
-PRJ  = hexTest          # Project name
+PRJ  = FifoTes          # Project name
 CPU  = atmega328p       # Processor type
 ARCH = ARDUINO_ARCH_AVR # Processor architecture
 BRD  = ARDUINO_AVR_UNO  # Target ardunio board
@@ -73,9 +73,9 @@ OCFLAGS = --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-s
 
 # List of object files that must be built for the project.
 OBJS = &
-   hexTest.o &
-   Hex.o &
-   aunit.o
+   FifoTest.o &
+   Fifo.o &
+   aunit.o 
       
 all: $(TARGET).hex
  

@@ -1,0 +1,9 @@
+aunit - Arduino unit test helper functions
+
+A set of functions used to facilitate unit testing on an Arduino.
+
+Designed to be lightweight due to the limited resources of some
+Arduino platforms.  This is not a complete unit test framework.
+
+Copy aunit.cpp and aunit.h into your unit test sketch folder and
+compile them along with your unit test sketch.

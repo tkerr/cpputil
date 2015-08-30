@@ -1,11 +1,9 @@
-hex.c module test program for the Arduino hardware platform.
+Fifo.cpp module test program for the Arduino hardware platform.
 Uses the aunit pseudo test framework to execute the tests.
 Tested only on the Arduino Uno.
 
 Copy the following files into the sketch folder:
-hex.c
-hex.h
+Fifo.cpp
+Fifo.h
 aunit.cpp
 aunit.h
-UnionTypeDefs.h
-

@@ -17,6 +17,10 @@
  *
  * Modification History:
  *
+ * 08/29/2015 - Tom Kerr
+ * Modified to use aunit test structure.
+ * Moved some strings to PROGMEM.
+ *
  * 07/25/2015 - Tom Kerr
  * Initial creation.
  ******************************************************************************/
@@ -26,11 +30,11 @@
  * @brief
  * Arduino Uno Bcd.c module test program.
  *
- * Contains the setup() and loop() functions for the program.
- * Also contains all necessary test functions.
+ * Contains the setup() and loop() functions for the program.  Also uses the
+ * aunit pseudo test framework to execute the tests.
  *
- * Copy Bcd.c, Bcd.h and UnionTypeDefs.h into your sketch folder.  This sketch 
- * tests all functions in the Bcd.c module.
+ * Copy aunit.cpp, aunit.h, UnionTypeDefs.h, Bcd.c, and Bcd.h into your sketch
+ * folder.  This sketch tests all functions in the Bcd.c module.
  */
  
 /******************************************************************************
@@ -42,7 +46,7 @@
  * System include files.
  ******************************************************************************/
 #include <stdint.h>
-#include <avr/wdt.h>
+#include <avr/pgmspace.h>
 #include <Wire.h>
 #include "Arduino.h"
 
@@ -50,6 +54,7 @@
 /******************************************************************************
  * Local include files.
  ******************************************************************************/
+#include "aunit.h"
 #include "Bcd.h"
  
  
@@ -62,7 +67,6 @@
  * Local definitions.
  ******************************************************************************/
 #define BCD_DIGITS 20
-#define HEX_DIGITS 16
 
 
 /******************************************************************************
@@ -73,7 +77,6 @@
 /******************************************************************************
  * Local definitions.
  ******************************************************************************/
-#define RUN_TEST(x) if (x) {Serial.write("PASS\r\n");} else {Serial.write("FAIL\r\n");}
 
 
 /******************************************************************************
@@ -88,10 +91,10 @@
 /**************************************
  * Test_BCD_ByteToBcd
  **************************************/
-bool Test_BCD_ByteToBcd(void)
+void Test_BCD_ByteToBcd(void)
 {
-    bool ok = true;
-    Serial.write("Testing BCD_ByteToBcd() ");
+    Serial.println(F("Testing BCD_ByteToBcd()"));
+    bool pass = false;
     
     // Test all combinations from 00 to 99.
     for (uint8_t i=0; i < 10; i++)
@@ -101,30 +104,22 @@ bool Test_BCD_ByteToBcd(void)
             uint8_t bin = (i * 10) + j;
             uint8_t bcd_exp = (i << 4) | j;
             uint8_t bcd_act = BCD_ByteToBcd(bin);
-            if (bcd_act != bcd_exp)
-            {
-                ok = false;
-                break;
-            }
+            pass = (bcd_act == bcd_exp);
+            TEST_ASSERT_BREAK(pass, i, j);
         }
-        
-        if (ok == false)
-        {
-            break;
-        }
+        if (!pass) break;
     }
-    
-    return ok;
+    TEST_ASSERT_PASS(pass);
 }
 
 
 /**************************************
  * Test_BCD_BcdToByte
  **************************************/
-bool Test_BCD_BcdToByte(void)
+void Test_BCD_BcdToByte(void)
 {
-    bool ok = true;
-    Serial.write("Testing BCD_BcdToByte() ");
+    Serial.println(F("Testing BCD_BcdToByte()"));
+    bool pass = false;
     
     // Test all combinations from 00 to 99.
     for (uint8_t i=0; i < 10; i++)
@@ -134,36 +129,28 @@ bool Test_BCD_BcdToByte(void)
             uint8_t bcd = (i << 4) | j;
             uint8_t bin_exp = (i * 10) + j;
             uint8_t bin_act = BCD_BcdToByte(bcd);
-            if (bin_act != bin_exp)
-            {
-                ok = false;
-                break;
-            }
+            pass = (bin_act == bin_exp);
+            TEST_ASSERT_BREAK(pass, i, j);
         }
-        
-        if (ok == false)
-        {
-            break;
-        }
+        if (!pass) break;
     }
     
-    return ok;
+    TEST_ASSERT_PASS(pass);
 }
 
 
 /**************************************
  * Test_ByteToBcdToAscii
  **************************************/
-bool Test_ByteToBcdToAscii(void)
+void Test_ByteToBcdToAscii(void)
 {
-    bool     ok = true;
     int      size = 0;
     uint64_t bin = 0;
     uint8_t  bcd[BCD_DIGITS+1];
     char     ascii[BCD_DIGITS+1];
     
-    Serial.write("Testing BCD_BinaryToBcd -> BCD_BcdToAscii\r\n");
-    Serial.write("[digit] [BCD array size] [ASCII result]\r\n");
+    Serial.println(F("Testing BCD_BinaryToBcd -> BCD_BcdToAscii"));
+    Serial.println(F("[digit] [BCD array size] [ASCII result]"));
 
     uint64_t power = 1;
     
@@ -184,11 +171,10 @@ bool Test_ByteToBcdToAscii(void)
         BCD_BcdToAscii(bcd, size, ascii);
         
         Serial.print(digit);
-        Serial.write(" ");
+        Serial.print(" ");
         Serial.print(size);
-        Serial.write(" ");
-        Serial.write(ascii);
-        Serial.write("\r\n");
+        Serial.print(" ");
+        Serial.println(ascii);
         
         power *= 10;
     }
@@ -197,13 +183,10 @@ bool Test_ByteToBcdToAscii(void)
     bin = 0xFFFFFFFFFFFFFFFFull;
     size = BCD_BinaryToBcd(bin, bcd);
     BCD_BcdToAscii(bcd, size, ascii);
-    Serial.write("M ");
+    Serial.print("M ");
     Serial.print(size);
-    Serial.write(" ");
-    Serial.write(ascii);
-    Serial.write("\r\n");
-    
-    return ok;  // Always returns true
+    Serial.print(" ");
+    Serial.println(ascii);
 }
 
 
@@ -221,14 +204,11 @@ void setup(void)
  **************************************/
 void loop(void)
 {
-    Serial.write("Press any key to start: ");
-    while (Serial.available() < 1) {}
-    Serial.read();
-    Serial.write("\r\n");
+    TEST_WAIT();
     
-    RUN_TEST(Test_BCD_ByteToBcd())
-    RUN_TEST(Test_BCD_BcdToByte())
-    RUN_TEST(Test_ByteToBcdToAscii())
+    Test_BCD_ByteToBcd();
+    Test_BCD_BcdToByte();
+    Test_ByteToBcdToAscii();
 }
 
 

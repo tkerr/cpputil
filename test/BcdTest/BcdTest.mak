@@ -74,7 +74,8 @@ OCFLAGS = --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-s
 # List of object files that must be built for the project.
 OBJS = &
    BcdTest.o &
-   Bcd.o
+   Bcd.o &
+   aunit.o &
       
 all: $(TARGET).hex
  
