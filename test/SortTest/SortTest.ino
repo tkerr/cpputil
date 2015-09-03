@@ -84,7 +84,7 @@
 /**************************************
  * compare_uint32
  **************************************/ 
-int compare_uint32(const void * a, const void * b)
+int compare_uint32(const void* a, const void* b)
 {
   if ( *(uint32_t*)a <  *(uint32_t*)b ) return -1;
   if ( *(uint32_t*)a == *(uint32_t*)b ) return 0;
@@ -113,7 +113,7 @@ void loop(void)
     TEST_WAIT();
     
     TEST_NUMBER(1);
-    int8_t* pi8 = (int8_t*) malloc(ARRAY_SIZE);
+    int8_t* pi8 = (int8_t*) malloc(ARRAY_SIZE * sizeof(int8_t));
     for (i = 0; i < ARRAY_SIZE; i++) pi8[i] = random(0, 0xFF);
     start = millis();
     selectsort_int8(pi8, ARRAY_SIZE);
@@ -129,7 +129,7 @@ void loop(void)
     free(pi8);
     
     TEST_NUMBER(2);
-    int16_t* pi16 = (int16_t*) malloc(ARRAY_SIZE);
+    int16_t* pi16 = (int16_t*) malloc(ARRAY_SIZE * sizeof(int16_t));
     for (i = 0; i < ARRAY_SIZE; i++) pi16[i] = random(0, 0xFFFF);  
     start = millis();    
     selectsort_int16(pi16, ARRAY_SIZE);
@@ -145,7 +145,7 @@ void loop(void)
     free(pi16);
         
     TEST_NUMBER(3);
-    int32_t* pi32 = (int32_t*) malloc(ARRAY_SIZE);
+    int32_t* pi32 = (int32_t*) malloc(ARRAY_SIZE * sizeof(int32_t));
     for (i = 0; i < ARRAY_SIZE; i++) pi32[i] = random(0, 0xFFFFFFFF);  
     start = millis();    
     selectsort_int32(pi32, ARRAY_SIZE);
@@ -161,7 +161,7 @@ void loop(void)
     free(pi32);
     
     TEST_NUMBER(4);
-    uint8_t* pu8 = (uint8_t*) malloc(ARRAY_SIZE);
+    uint8_t* pu8 = (uint8_t*) malloc(ARRAY_SIZE * sizeof(uint8_t));
     for (i = 0; i < ARRAY_SIZE; i++) pu8[i] = random(0, 0xFF);
     start = millis();
     selectsort_uint8(pu8, ARRAY_SIZE);
@@ -177,7 +177,7 @@ void loop(void)
     free(pu8);
     
     TEST_NUMBER(5);
-    uint16_t* pu16 = (uint16_t*) malloc(ARRAY_SIZE);
+    uint16_t* pu16 = (uint16_t*) malloc(ARRAY_SIZE * sizeof(uint16_t));
     for (i = 0; i < ARRAY_SIZE; i++) pu16[i] = random(0, 0xFFFF);  
     start = millis();    
     selectsort_uint16(pu16, ARRAY_SIZE);
@@ -193,7 +193,7 @@ void loop(void)
     free(pu16);
     
     TEST_NUMBER(6);
-    uint32_t* pu32 = (uint32_t*) malloc(ARRAY_SIZE);
+    uint32_t* pu32 = (uint32_t*) malloc(ARRAY_SIZE * sizeof(uint32_t));
     for (i = 0; i < ARRAY_SIZE; i++) pu32[i] = random(0, 0xFFFFFFFF);  
     start = millis();    
     selectsort_uint32(pu32, ARRAY_SIZE);
@@ -210,7 +210,7 @@ void loop(void)
     
     // Test quicksort just to see the time difference.
     TEST_NUMBER(7);
-    uint32_t* qs32 = (uint32_t*) malloc(ARRAY_SIZE);
+    uint32_t* qs32 = (uint32_t*) malloc(ARRAY_SIZE * sizeof(uint32_t));
     for (i = 0; i < ARRAY_SIZE; i++) qs32[i] = random(0, 0xFFFFFFFF);  
     start = millis();    
     qsort(qs32, ARRAY_SIZE, sizeof(uint32_t), compare_uint32);
