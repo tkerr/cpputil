@@ -7,6 +7,10 @@
  *
  * Modification History:
  *
+ * 09/08/2015 - Tom Kerr
+ * Modifications based on PC-Lint results. 
+ * Added HEX_IsHex() and HEX_IsHexString().
+ *
  * 08/23/2015 - Tom Kerr
  * Refactored the binary to hex conversion functions.
  *
@@ -58,6 +62,47 @@ static uint8_t  HEX_toBin(char c);            //!< Convert one hex digit to bina
 /******************************************************************************
  * Public functions.
  ******************************************************************************/
+ 
+/**************************************
+ * HEX_IsHex
+ **************************************/
+int HEX_IsHex(char c)
+{
+    if ( ( c >= '0' ) && ( c <= '9' ) )
+    {
+        return 1;
+    }
+    else if ( ( c >= 'A' ) && ( c <= 'F' ) )
+    {
+        return 1;
+    }
+    else if ( ( c >= 'a' ) && ( c <= 'f' ) )
+    {
+        return 1;
+    }
+    return 0;
+}
+
+
+/**************************************
+ * HEX_IsHexString
+ **************************************/
+int HEX_IsHexString(const char* str)
+{
+    int ok = 1;
+    
+    while ( str != 0 )
+    {
+        if ( !HEX_IsHex( *str ) )
+        {
+            ok = 0;
+            break;
+        }
+        str++;
+    }
+    
+    return ok;
+}
 
 
 /**************************************
@@ -134,7 +179,7 @@ char* HEX_Uint64ToHex(uint64_t bin, char* hex)
 uint8_t HEX_HexToUint8(const char* hex)
 {
     uint8_t bin = 0;
-    uint8_t len = HEX_strlen(hex);
+    uint8_t len = (uint8_t)HEX_strlen(hex);
     if (len <= (sizeof(bin) * 2))
     {
        bin = (uint8_t) HEX_doConvert(hex, len);
@@ -149,7 +194,7 @@ uint8_t HEX_HexToUint8(const char* hex)
 uint16_t HEX_HexToUint16(const char* hex)
 {
     uint16_t bin = 0;
-    uint8_t len = HEX_strlen(hex);
+    uint8_t len = (uint8_t)HEX_strlen(hex);
     if (len <= (sizeof(bin) * 2))
     {
         bin = (uint16_t) HEX_doConvert(hex, len);
@@ -164,7 +209,7 @@ uint16_t HEX_HexToUint16(const char* hex)
 uint32_t HEX_HexToUint32(const char* hex)
 {
     uint32_t bin = 0;
-    uint8_t len = HEX_strlen(hex);
+    uint8_t len = (uint8_t)HEX_strlen(hex);
     if (len <= (sizeof(bin) * 2))
     {
         bin = (uint32_t) HEX_doConvert(hex, len);
@@ -179,7 +224,7 @@ uint32_t HEX_HexToUint32(const char* hex)
 uint64_t HEX_HexToUint64(const char* hex)
 {
     uint64_t bin = 0;
-    uint8_t len = HEX_strlen(hex);
+    uint8_t len = (uint8_t)HEX_strlen(hex);
     if (len <= (sizeof(bin) * 2))
     {
         bin = HEX_doConvert(hex, len);
@@ -195,9 +240,9 @@ uint64_t HEX_HexToUint64(const char* hex)
 static void HEX_byteToHex(uint8_t bin, char* hex)
 {
     uint8_t c = (bin >> 4) & 0x0F;
-    BIN2ASC(c, hex[0])
+    BIN2ASC(c, hex[0])  //lint !e734 loss of precision OK
     c = bin & 0x0F;
-    BIN2ASC(c, hex[1])
+    BIN2ASC(c, hex[1])  //lint !e734 loss of precision OK
 }
 
 
@@ -234,7 +279,7 @@ static uint64_t HEX_doConvert(const char* hex, uint8_t len)
 static int HEX_strlen(const char* str)
 {
     register const char *s;
-    for (s = str; *s; ++s);
+    for (s = str; *s; ++s);  //lint !e722 empty for loop OK
     return(s - str);
 }
 

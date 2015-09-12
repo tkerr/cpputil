@@ -7,6 +7,10 @@
  *
  * Modification History:
  *
+ * 09/08/2015 - Tom Kerr
+ * Modifications based on PC-Lint results. 
+ * Added HEX_IsHex() and HEX_IsHexString().
+ *
  * 08/23/2015 - Tom Kerr
  * Refactored the binary to hex conversion functions.
  *
@@ -49,6 +53,33 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+/**
+ * @brief
+ * Test if an ASCII character is a hexadecimal digit.
+ *
+ * Returns true if c is in the range '0' - '9', 'A' - 'F', 'a' - 'f'.
+ *
+ * @param c The character to test.
+ *
+ * @return True if c is a hexadecimal digit, false otherwise.
+ */
+int HEX_IsHex(char c);
+
+
+/**
+ * @brief
+ * Test if a string contains only ASCII hexadecimal digits.
+ *
+ * Returns true if all characters in the string are hex digits.
+ * See HEX_IsHex().
+ *
+ * @param str The string to test.
+ *
+ * @return True if all characters in str are hexadecimal digits, false otherwise.
+ */
+int HEX_IsHexString(const char* str);
 
 
 /**
