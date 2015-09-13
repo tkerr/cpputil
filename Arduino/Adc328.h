@@ -7,6 +7,9 @@
  *
  * Modification History:
  *
+ * 09/12/2015 - Tom Kerr
+ * Refactored for better performance.
+ *
  * 07/26/2015 - Tom Kerr
  * Doxygen updates.
  *
@@ -96,7 +99,7 @@ public:
 
     /**
      * @brief
-     * Default constructor.  Currently not used.
+     * Default constructor.
      */
     Adc328();
     
@@ -106,8 +109,21 @@ public:
      *
      * @param ref The voltage reference to select, defined by the Adc328Ref
      * enumerated type.  Default is REF_AVCC.
+     *
+     * @param channel The channel to select, defined by the Adc328Channel
+     * enumerated type.  Default is CHANNEL_TMP, the internal temperature 
+     * sensor.
      */
-    void begin(Adc328Ref ref = REF_AVCC);
+    void begin(Adc328Ref ref = REF_AVCC, Adc328Channel channel = CHANNEL_TMP);
+    
+    /**
+     * @brief
+     * Set the ADC channel used for conversion.
+     *
+     * @param channel The channel to select, defined by the Adc328Channel
+     * enumerated type.
+     */
+    void setChannel(Adc328Channel channel); 
     
     /**
      * @brief
@@ -125,15 +141,15 @@ public:
      * @brief
      * Perform a single ADC conversion and return the result.
      *
+     * This is the common method that performs all ADC conversions.
+     * The channel is first set by setChannel().
+     *
      * This method blocks while the conversion is performed.  Interrupts are
      * not used.
      *
-     * @param channel The input channel to convert, defined by the Adc328Channel
-     * enumerated type.
-     *
      * @return The 10-bit ADC conversion result.
      */
-    uint16_t convert(Adc328Channel channel);
+    uint16_t convert(void);
     
     /**
      * @brief
@@ -145,39 +161,13 @@ public:
      * This method blocks while the conversions and filtering are performed.  
      * Interrupts are not used.
      *
-     * @param channel The input channel to convert, defined by the Adc328Channel
-     * enumerated type.
-     *
      * @return The 10-bit median filtered, ADC conversion result.
      */
-    uint16_t medianConvert(Adc328Channel channel);
+    uint16_t medianConvert();
     
 protected:
 
 private:
-
-    /**
-     * @brief
-     * Set the ADC channel used for conversion.
-     *
-     * @param channel The channel to select, defined by the Adc328Channel
-     * enumerated type.
-     */
-    void setChannel(Adc328Channel channel); 
-    
-    /**
-     * @brief
-     * Perform a single ADC conversion and return the result.
-     *
-     * This is the common method that performs all ADC conversions.
-     * The channel is first set by setChannel().
-     *
-     * This method blocks while the conversion is performed.  Interrupts are
-     * not used.
-     *
-     * @return The 10-bit ADC conversion result.
-     */
-    uint16_t doConvert(void);
     
 };
 

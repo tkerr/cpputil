@@ -1,0 +1,9 @@
+Queue16.c module test program for the Arduino hardware platform.
+Uses the aunit pseudo test framework to execute the tests.
+Tested only on the Arduino Uno.
+
+Copy the following files into the sketch folder:
+Queue16.c
+Queue16.h
+aunit.cpp
+aunit.h

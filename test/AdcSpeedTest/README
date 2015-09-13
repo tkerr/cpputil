@@ -1,0 +1,11 @@
+Speed test program for the Arduino Adc328 object.
+Tested only on the Arduino Uno.
+
+This sketch performs a large number of timed ADC conversions using the 
+Adc328 object.  The purpose is to measure the performance of the object.
+
+Copy the following files into the sketch folder:
+Adc328.cpp
+Adc328.h
+aunit.cpp
+aunit.h
