@@ -14,6 +14,9 @@
 #
 # Modification History:
 #
+# 09/22/2015 - Tom Kerr
+# Refactored .ino build rule.
+#
 # 09/01/2015 - Tom Kerr
 # Initial creation.
 ##############################################################################
@@ -67,6 +70,7 @@ SOURCEPATH = .
 CFLAGS  = -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -MMD -mmcu=$(CPU) &
     -DF_CPU=$(F_CPU) -DARDUINO=$(ARDUINO_REV) -D$(CPU) -D$(BRD) -D$(ARCH)
 CCFLAGS = -fno-threadsafe-statics
+INOFLAGS = -x c++
 LDFLAGS = -Os -Wl,--gc-sections -mmcu=$(CPU)
 ARFLAGS = rcs
 OCFLAGS = --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
@@ -88,9 +92,7 @@ $(TARGET).elf : $(OBJS)
 	$(LD) $(LDFLAGS) -o $(TARGET).elf $(OBJS) $(LD_LIB_WITAQ) $(LD_ALIB) $(LD_CORE_LIB) -lm
     
 .ino.o:
-    copy /Y "$[*.ino" "$[*.cpp" >nul
-    $(CC) $(CFLAGS) $(CCFLAGS) $(INC) -Wa,-ahls="$[*.lst" "$[*.cpp" -o"$[&.o"
-    del "$[*.cpp" >nul
+    $(CC) $(CFLAGS) $(CCFLAGS) $(INOFLAGS) $(INC) -Wa,-ahls="$[*.lst" "$[*.ino" -o"$[&.o"
     
 .c.o:
 	$(CC) $(CFLAGS) $(INC) -Wa,-ahls="$[*.lst" "$[*.c" -o"$[&.o" 

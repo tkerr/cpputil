@@ -7,6 +7,12 @@
  *
  * Modification History:
  *
+ * 09/22/2015 - Tom Kerr
+ * Refactored.  Fail messages can now print source file line numbers.
+ * Renamed most functions and added a corresponding macro to automatically
+ * insert the line number.
+ * Added TEST_INIT() and TEST_ASSERT_COUNT().
+ *
  * 08/29/2015 - Tom Kerr
  * Created.
  ******************************************************************************/
@@ -45,13 +51,72 @@
  * Public definitions.
  ******************************************************************************/
 
+/****
+ * These macros are  used to automatically insert the line number into the
+ * test failure message.
+ */
+ 
+/**
+ * @brief
+ * Test the boolean condition and print a pass/fail message. 
+ * See TEST_ASSERT_L().
+ */ 
+#define TEST_ASSERT(a) TEST_ASSERT_L((a), __LINE__);
+
 /**
  * @brief
  * Break out of a loop if the test assertion fails.
  * Print a fail message only; do not print a pass message.
+ * See TEST_ASSERT_FAIL_L().
  */
-#define TEST_ASSERT_BREAK(a, b, c) if (!TEST_ASSERT_FAIL((a), b, c)) break;
+#define TEST_ASSERT_BREAK(a) if (!TEST_ASSERT_FAIL_L((a), __LINE__)) break;
 
+/**
+ * @brief
+ * Break out of a loop if the test assertion fails.
+ * Print a fail message only; do not print a pass message.
+ * Print one user-supplied numeric parameter in the fail message.
+ * See TEST_ASSERT_FAIL1_L().
+ */
+#define TEST_ASSERT_BREAK1(a, b) if (!TEST_ASSERT_FAIL1_L((a), b, __LINE__)) break;
+
+/**
+ * @brief
+ * Break out of a loop if the test assertion fails.
+ * Print a fail message only; do not print a pass message.
+ * Print two user-supplied numeric parameters in the fail message.
+ * See TEST_ASSERT_FAIL2_L().
+ */ 
+#define TEST_ASSERT_BREAK2(a, b, c) if (!TEST_ASSERT_FAIL2_L((a), b, c, __LINE__)) break;
+
+/**
+ * @brief
+ * Test the boolean condition and print a message only if the test fails.
+ * See TEST_ASSERT_FAIL_L().
+ */
+#define TEST_ASSERT_FAIL(a) TEST_ASSERT_FAIL_L((a), __LINE__);
+
+/**
+ * @brief
+ * Test the boolean condition and print a message only if the test fails.
+ * Print one user-supplied numeric parameter in the fail message.
+ * See TEST_ASSERT_FAIL1_L().
+ */
+#define TEST_ASSERT_FAIL1(a, b) TEST_ASSERT_FAIL1_L((a), b, __LINE__);
+
+/**
+ * @brief
+ * Test the boolean condition and print a message only if the test fails.
+ * Print two user-supplied numeric parameters in the fail message.
+ * See TEST_ASSERT_FAIL2_L().
+ */
+#define TEST_ASSERT_FAIL2(a, b, c) TEST_ASSERT_FAIL2_L((a), b, c, __LINE__);
+
+/**
+ * @brief
+ * Print the current file name.
+ */
+#define TEST_FILE() Serial.println(F(__FILE__));
 
 
 /******************************************************************************
@@ -60,13 +125,41 @@
  
 /**
  * @brief
+ * Initialize the unit test environment. 
+ *
+ * Currently only needed to clear the test assertion count.  The test assertion
+ * count can be read using TEST_ASSERT_COUNT().
+ */ 
+void TEST_INIT(void);
+
+
+/**
+ * @brief
+ * Return the test assertion count.
+ *
+ * The test assertion count is incremented with each call to  TEST_ASSERT(),
+ * TEST_ASSERT_PASS(), TEST_ASSERT_FAIL(),TEST_ASSERT_FAIL2(), and 
+ * TEST_ASSERT_BREAK().  Use this function to read the total count.  
+ * The count is reset by calling TEST_INIT().
+ *
+ * @return The total test assertion count since the last initialization.
+ */ 
+uint32_t TEST_ASSERT_COUNT(void);
+
+ 
+/**
+ * @brief
  * Test the boolean condition and print a pass/fail message. 
  *
  * @param cond The test assertion condition.
  *
+ * @param line The line number of the failed test.  Call using the __LINE__ 
+ * preprocessor directive for this parameter.  Use the TEST_ASSERT()
+ * macro to automatically insert the line number.
+ *
  * @return The assertion result.
  */
-bool TEST_ASSERT(bool cond);
+bool TEST_ASSERT_L(bool cond, uint16_t line);
 
 
 /**
@@ -84,9 +177,38 @@ bool TEST_ASSERT_PASS(bool cond);
  * @brief
  * Test the boolean condition and print a message only if the test fails. 
  *
- * Intended to be used within loop constucts.  Two additional parameters are
- * passed by the caller and printed if the test fails.  The intention is to
- * help provide traceablilty to the test case that failed.
+ * @param cond The test assertion condition.
+ *
+ * @param line The line number of the failed test.  Call using the __LINE__ 
+ * preprocessor directive for this parameter.  Use the TEST_ASSERT_FAIL()
+ * macro to automatically insert the line number.
+ *
+ * @return The assertion result.
+ */
+bool TEST_ASSERT_FAIL_L(bool cond, uint16_t line);
+
+
+/**
+ * @brief
+ * Test the boolean condition and print a message only if the test fails. 
+ * Also prints one user-supplied numeric value in the test fail message.
+ *
+ * @param cond The test assertion condition.
+ *
+ * @param x A test variable printed if the test fails.
+ *
+ * @param line The line number of the failed test.  Call using the __LINE__ 
+ * preprocessor directive for this parameter.  Use the TEST_ASSERT_FAIL1()
+ * macro to automatically insert the line number.
+ *
+ * @return The assertion result.
+ */
+bool TEST_ASSERT_FAIL1_L(bool cond, int16_t x, uint16_t line);
+
+/**
+ * @brief
+ * Test the boolean condition and print a message only if the test fails. 
+ * Also prints two user-supplied numeric values in the test fail message.
  *
  * @param cond The test assertion condition.
  *
@@ -94,9 +216,13 @@ bool TEST_ASSERT_PASS(bool cond);
  *
  * @param y A test variable printed if the test fails.
  *
+ * @param line The line number of the failed test.  Call using the __LINE__ 
+ * preprocessor directive for this parameter.  Use the TEST_ASSERT_FAIL2()
+ * macro to automatically insert the line number.
+ *
  * @return The assertion result.
  */
-bool TEST_ASSERT_FAIL(bool cond, int16_t x, int16_t y);
+bool TEST_ASSERT_FAIL2_L(bool cond, int16_t x, int16_t y, uint16_t line);
 
 
 /**

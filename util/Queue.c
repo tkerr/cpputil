@@ -21,6 +21,18 @@
  * buffer by clearing or setting the overwrite flag.  As a traditional queue, 
  * no further data can be added when it is full.  As a moving window, new data 
  * replaces the oldest data when the queue is full.
+ *
+ * Note that appropriate locking mechanisms must be used if these functions are
+ * used in interrupt service routines or by multiple threads.  The functions do
+ * not disable interrupts or use mutexes for thread safe access.
+ *
+ * QUEUE_Enqueue(), QUEUE_Dequeue(), and QUEUE_Peek() copy data to/from the queue.
+ *
+ * QUEUE_EnqueuePtr(), QUEUE_DequeuePtr(), and QUEUE_PeekPtr() return pointers
+ * to queued data elements were data can be copied or manipulated directly.
+ * These functions are intended for embedded systems with extreme memory 
+ * limitations or for applications that need to avoid the latency involved in 
+ * copying large data elements to/from the queue.
  */
  
 /******************************************************************************
@@ -37,6 +49,10 @@
 /******************************************************************************
  * Forward references.
  ******************************************************************************/
+/**
+ * @brief
+ * Fast copy function that assumes no data overlap.
+ */
 static void QUEUE_Copy(char* dst, const char* src, size_t len);
 
 
@@ -108,7 +124,7 @@ int QUEUE_Dequeue(QUEUE* queue, void* pData)
 {
     int removed = 0;
     
-    // Remove element from head.
+    // Remove data element from head.
     if (queue->count > 0)
     {
         QUEUE_Copy((char*)pData, queue->head, queue->size);
@@ -137,7 +153,7 @@ int QUEUE_Enqueue(QUEUE* queue, const void* pData)
         queue->count--;
     }
     
-    // Add element to tail.
+    // Add data element to tail.
     if (queue->count < queue->num)
     {
         QUEUE_Copy(queue->tail, (char*)pData, queue->size);
@@ -168,6 +184,74 @@ int QUEUE_Peek(const QUEUE* queue, int index, void* pData)
     }
     
     return copied;
+}
+
+
+/**************************************
+ * QUEUE_DequeuePtr
+ **************************************/
+int QUEUE_DequeuePtr(QUEUE* queue)
+{
+    int removed = 0;
+    
+    // Remove data element from head.
+    if (queue->count > 0)
+    {
+        ptr = queue->head;
+        queue->head += queue->size;
+        if (queue->head >= queue->end) queue->head = queue->base;
+        queue->count--;
+        removed = 1;
+    }
+    
+    return removed;
+}
+
+
+/**************************************
+ * QUEUE_EnqueuePtr
+ **************************************/
+void* QUEUE_EnqueuePtr(QUEUE* queue)
+{
+    char* ptr = NULL;
+    
+    // Dequeue oldest data element if queue full and overwrite flag set.
+    if (queue->overwrite && (queue->count == queue->num))
+    {
+        queue->head += queue->size;
+        if (queue->head >= queue->end) queue->head = queue->base;
+        queue->count--;
+    }
+    
+    // Allocate data element to tail.
+    if (queue->count < queue->num)
+    {
+        ptr = queue->tail;
+        queue->tail += queue->size;
+        if (queue->tail >= queue->end) queue->tail = queue->base;
+        queue->count++;
+    }
+    
+    // Return pointer to allocated data element.
+    return (void*)ptr;
+}
+
+
+/**************************************
+ * QUEUE_PeekPtr
+ **************************************/
+void* QUEUE_PeekPtr(const QUEUE* queue, int index)
+{
+    char* ptr = NULL;
+    
+    if ((queue->count > 0) && (index < queue->count))
+    {
+        ptr = queue->head + (index * queue->size);
+        if (ptr >= queue->end) ptr -= (queue->end - queue->base);
+    }
+    
+    // Return pointer to data element.
+    return (void*)ptr;
 }
 
 

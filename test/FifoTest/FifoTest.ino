@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 09/22/2015 - Tom Kerr
+ * Use refactored aunit test functions.
+ *
  * 08/28/2015 - Tom Kerr
  * Initial creation.
  ******************************************************************************/
@@ -106,6 +109,7 @@ void loop(void)
     //Serial.write("\r\n");
     
     TEST_WAIT();
+    TEST_INIT();
     
     TestFifo.clear();
     
@@ -120,11 +124,11 @@ void loop(void)
     TEST_NUMBER(3); 
     for (i=1; i<=FIFO_SIZE; i++)
     {
-        TEST_ASSERT_BREAK((TestFifo.add(&i, 1) == 1), i, 1);
-        TEST_ASSERT_BREAK((TestFifo.count() == i), i, 2);
-        TEST_ASSERT_BREAK((TestFifo.available() == (FIFO_SIZE - i)), i, 3);
-        TEST_ASSERT_BREAK((TestFifo.peek(&dataBuf[0], 1) == 1), i, 4);
-        TEST_ASSERT_BREAK((dataBuf[0] == 1), i, 5);  // Peek should never consume fifo bytes
+        TEST_ASSERT_BREAK2((TestFifo.add(&i, 1) == 1), i, 1);
+        TEST_ASSERT_BREAK2((TestFifo.count() == i), i, 2);
+        TEST_ASSERT_BREAK2((TestFifo.available() == (FIFO_SIZE - i)), i, 3);
+        TEST_ASSERT_BREAK2((TestFifo.peek(&dataBuf[0], 1) == 1), i, 4);
+        TEST_ASSERT_BREAK2((dataBuf[0] == 1), i, 5);  // Peek should never consume fifo bytes
     }
     TEST_ASSERT_PASS(i > FIFO_SIZE);
     
@@ -138,7 +142,7 @@ void loop(void)
     TEST_NUMBER(6); 
     for (i=1; i<=FIFO_SIZE; i++)
     {
-        TEST_ASSERT_BREAK((dataBuf[i] == i), i, 1);
+        TEST_ASSERT_BREAK2((dataBuf[i] == i), i, 1);
     }
     TEST_ASSERT_PASS(i > FIFO_SIZE);
     
@@ -147,10 +151,10 @@ void loop(void)
     dataBuf[0] = 0;
     for (i=1; i<=FIFO_SIZE; i++)
     {
-        TEST_ASSERT_BREAK((TestFifo.remove(&dataBuf[i], 1) == 1), i, 1);
-        TEST_ASSERT_BREAK((dataBuf[i] == i), i, 2);
-        TEST_ASSERT_BREAK((TestFifo.count() == (FIFO_SIZE - i)), i, 3);
-        TEST_ASSERT_BREAK((TestFifo.available() == i), i, 4);
+        TEST_ASSERT_BREAK2((TestFifo.remove(&dataBuf[i], 1) == 1), i, 1);
+        TEST_ASSERT_BREAK2((dataBuf[i] == i), i, 2);
+        TEST_ASSERT_BREAK2((TestFifo.count() == (FIFO_SIZE - i)), i, 3);
+        TEST_ASSERT_BREAK2((TestFifo.available() == i), i, 4);
     }
     TEST_ASSERT_PASS(i > FIFO_SIZE);
     
@@ -163,9 +167,9 @@ void loop(void)
     while (TestFifo.available() > group)
     {
         pass = false;
-        TEST_ASSERT_BREAK((TestFifo.add(&dataBuf[0], group) == group), 1, 0);
+        TEST_ASSERT_BREAK2((TestFifo.add(&dataBuf[0], group) == group), 1, 0);
         total += group;
-        TEST_ASSERT_BREAK((TestFifo.count() == total), 2, 0);
+        TEST_ASSERT_BREAK2((TestFifo.count() == total), 2, 0);
         pass = true;
     }
     TEST_ASSERT_PASS(pass);
@@ -187,9 +191,9 @@ void loop(void)
     while (TestFifo.count() > group)
     {
         pass = false;
-        TEST_ASSERT_BREAK((TestFifo.remove(&dataBuf[0], group) == group), 1, 0);
+        TEST_ASSERT_BREAK2((TestFifo.remove(&dataBuf[0], group) == group), 1, 0);
         total += group;
-        TEST_ASSERT_BREAK((TestFifo.available() == total), 2, 0);
+        TEST_ASSERT_BREAK2((TestFifo.available() == total), 2, 0);
         pass = true;
     }
     TEST_ASSERT_PASS(pass);
@@ -224,14 +228,14 @@ void loop(void)
         dataBuf[0] = data_in++;
         dataBuf[1] = data_in++;
         dataBuf[2] = data_in++;
-        TEST_ASSERT_BREAK((TestFifo.add(dataBuf, group) == group), j, 1);
+        TEST_ASSERT_BREAK2((TestFifo.add(dataBuf, group) == group), j, 1);
         
         // Remove a group of bytes from the fifo.
-        TEST_ASSERT_BREAK((TestFifo.remove(dataBuf, group) == group), j, 2);
+        TEST_ASSERT_BREAK2((TestFifo.remove(dataBuf, group) == group), j, 2);
         for (i=0; i<group; i++)
         {
             pass = false;
-            TEST_ASSERT_BREAK((dataBuf[i] == data_out), j, 3);
+            TEST_ASSERT_BREAK2((dataBuf[i] == data_out), j, 3);
             data_out++;
             pass = true;
         }
@@ -246,6 +250,9 @@ void loop(void)
     TEST_NUMBER(20); 
     TestFifo.clear();
     TEST_ASSERT(TestFifo.count() == 0);
+    
+    Serial.print("Test assertions: ");
+    Serial.println(TEST_ASSERT_COUNT());
 }
 
 

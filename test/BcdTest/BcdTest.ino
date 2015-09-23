@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 09/22/2015 - Tom Kerr
+ * Use refactored aunit test functions.
+ *
  * 08/29/2015 - Tom Kerr
  * Modified to use aunit test structure.
  * Moved some strings to PROGMEM.
@@ -105,7 +108,7 @@ void Test_BCD_ByteToBcd(void)
             uint8_t bcd_exp = (i << 4) | j;
             uint8_t bcd_act = BCD_ByteToBcd(bin);
             pass = (bcd_act == bcd_exp);
-            TEST_ASSERT_BREAK(pass, i, j);
+            TEST_ASSERT_BREAK2(pass, i, j);
         }
         if (!pass) break;
     }
@@ -130,7 +133,7 @@ void Test_BCD_BcdToByte(void)
             uint8_t bin_exp = (i * 10) + j;
             uint8_t bin_act = BCD_BcdToByte(bcd);
             pass = (bin_act == bin_exp);
-            TEST_ASSERT_BREAK(pass, i, j);
+            TEST_ASSERT_BREAK2(pass, i, j);
         }
         if (!pass) break;
     }

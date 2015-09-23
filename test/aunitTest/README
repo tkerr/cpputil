@@ -1,0 +1,7 @@
+aunit.cpp module test program for the Arduino hardware platform.
+Tests the unit test framework.
+Tested only on the Arduino Uno.
+
+Copy the following files into the sketch folder:
+aunit.cpp
+aunit.h

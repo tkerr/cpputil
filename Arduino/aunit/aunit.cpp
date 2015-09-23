@@ -7,6 +7,12 @@
  *
  * Modification History:
  *
+ * 09/22/2015 - Tom Kerr
+ * Refactored.  Fail messages can now print source file line numbers.
+ * Renamed most functions and added a corresponding macro to automatically
+ * insert the line number.
+ * Added TEST_INIT() and TEST_ASSERT_COUNT().
+ *
  * 08/28/2015 - Tom Kerr
  * Created.
  ******************************************************************************/
@@ -58,23 +64,47 @@
 /******************************************************************************
  * Local data.
  ******************************************************************************/
+static uint32_t sAssertCount = 0;  //!< Total assertion count
 
 
 /******************************************************************************
  * Public functions.
  ******************************************************************************/
  
- 
 /**************************************
- * TEST_ASSERT
- **************************************/
-bool TEST_ASSERT(bool cond)
+ * TEST_INIT
+ **************************************/ 
+void TEST_INIT(void)
 {
+    sAssertCount = 0;
+}
+
+
+/**************************************
+ * TEST_ASSERT_COUNT
+ **************************************/ 
+uint32_t TEST_ASSERT_COUNT(void)
+{
+    return sAssertCount;
+}
+
+    
+/**************************************
+ * TEST_ASSERT_L
+ **************************************/
+bool TEST_ASSERT_L(bool cond, uint16_t line)
+{
+    sAssertCount++;
+    
     // Print pass/fail message.
     if (cond)
-        Serial.println(F(" PASS"));
+        Serial.println(F("PASS"));
     else
+    {
+        Serial.print(F("LINE "));
+        Serial.print(line);
         Serial.println(F(" FAIL"));
+    }
     return cond;
 }
 
@@ -84,26 +114,70 @@ bool TEST_ASSERT(bool cond)
  **************************************/
 bool TEST_ASSERT_PASS(bool cond)
 {
+    sAssertCount++;
+     
     // Print test pass message only.
     if (cond)
-        Serial.println(F(" PASS"));
+        Serial.println(F("PASS"));
     return cond;
 }
 
 
 /**************************************
- * TEST_ASSERT_FAIL
+ * TEST_ASSERT_FAIL_L
  **************************************/
-bool TEST_ASSERT_FAIL(bool cond, int16_t i, int16_t j)
+bool TEST_ASSERT_FAIL_L(bool cond, uint16_t line)
 {
+    sAssertCount++;
+     
+    // Print fail message only.
+    if (!cond)
+    {
+        Serial.print(F("LINE "));
+        Serial.print(line);
+        Serial.println(F(" FAIL"));
+    }
+    return cond;
+}
+
+
+/**************************************
+ * TEST_ASSERT_FAIL1_L
+ **************************************/
+bool TEST_ASSERT_FAIL1_L(bool cond, int16_t i, uint16_t line)
+{
+    sAssertCount++;
+     
     // Print fail message only + loop variables.
     if (!cond)
     {
-        Serial.print(F(" ("));
+        Serial.print(F("LINE "));
+        Serial.print(line);
+        Serial.print(F(" FAIL ("));
+        Serial.print(i);
+        Serial.println(F(")"));
+    }
+    return cond;
+}
+
+
+/**************************************
+ * TEST_ASSERT_FAIL2_L
+ **************************************/
+bool TEST_ASSERT_FAIL2_L(bool cond, int16_t i, int16_t j, uint16_t line)
+{
+    sAssertCount++;
+     
+    // Print fail message only + loop variables.
+    if (!cond)
+    {
+        Serial.print(F("LINE "));
+        Serial.print(line);
+        Serial.print(F(" FAIL ("));
         Serial.print(i);
         Serial.print(',');
         Serial.print(j);
-        Serial.println(F(") FAIL"));
+        Serial.println(F(")"));
     }
     return cond;
 }

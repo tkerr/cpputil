@@ -5,5 +5,7 @@ Tested only on the Arduino Uno.
 Copy the following files into the sketch folder:
 Checksum.c
 Checksum.h
+UnionTypeDefs.h
 aunit.cpp
 aunit.h
+

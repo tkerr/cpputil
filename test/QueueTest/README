@@ -7,5 +7,6 @@ Queue.c
 Queue.h
 Checksum.c
 Checksum.h
+UnionTypeDefs.h
 aunit.cpp
 aunit.h

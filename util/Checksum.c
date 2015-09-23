@@ -7,6 +7,9 @@
  *
  * Modification History:
  *
+ * 09/18/2015 - Tom Kerr
+ * Added ipv4_checksum().
+ *
  * 09/16/2015 - Tom Kerr
  * Created.
  ******************************************************************************/
@@ -14,7 +17,7 @@
 /**
  * @file
  * @brief
- * Computes a two's complement checksum on a block of data.
+ * Checksum functions for detecting errors in blocks of data.
  */
  
 /******************************************************************************
@@ -26,6 +29,7 @@
  * Local include files.
  ******************************************************************************/
 #include "checksum.h"
+#include "UnionTypeDefs.h"
 
 
 /******************************************************************************
@@ -43,7 +47,6 @@
  ******************************************************************************/
 
 
- 
 /******************************************************************************
  * Public functions.
  ******************************************************************************/
@@ -57,6 +60,25 @@ char checksum(const void* pData, size_t len)
     char  sum = 0;
     do {sum += *ptr++;} while (--len);
     return ~sum + 1;
+}
+
+
+/**************************************
+ * ipv4_checksum
+ **************************************/
+uint16_t ipv4_checksum(const void* pData, size_t len)
+{
+    uint32u_t sum;
+    
+    uint16_t* ptr = (uint16_t*) pData;
+    size_t i = len / sizeof(uint16_t);
+    sum.v = 0;
+    do {sum.v += *ptr++;} while (--i);
+    
+    // If a carry exists, add it back to the checksum.
+    while (sum.w[1] != 0) {sum.v = sum.w[0] + sum.w[1];}
+    
+    return ~sum.w[0];
 }
 
 

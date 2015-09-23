@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 09/22/2015 - Tom Kerr
+ * Use refactored aunit test functions.
+ *
  * 09/01/2015 - Tom Kerr
  * Initial creation.
  ******************************************************************************/
@@ -111,6 +114,7 @@ void loop(void)
     uint32_t start, end;
     
     TEST_WAIT();
+    TEST_INIT();
     
     TEST_NUMBER(1);
     int8_t* pi8 = (int8_t*) malloc(ARRAY_SIZE * sizeof(int8_t));
@@ -121,7 +125,7 @@ void loop(void)
     for (i = 0; i < ARRAY_SIZE-1; i++)
     {
         pass = (pi8[i] <= pi8[i+1]);
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     TEST_ASSERT_PASS(pass);
     Serial.print(end-start);
@@ -137,7 +141,7 @@ void loop(void)
     for (i = 0; i < ARRAY_SIZE-1; i++)
     {
         pass = (pi16[i] <= pi16[i+1]);
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     TEST_ASSERT_PASS(pass);
     Serial.print(end-start);
@@ -153,7 +157,7 @@ void loop(void)
     for (i = 0; i < ARRAY_SIZE-1; i++)
     {
         pass = (pi32[i] <= pi32[i+1]);
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     TEST_ASSERT_PASS(pass);
     Serial.print(end-start);
@@ -169,7 +173,7 @@ void loop(void)
     for (i = 0; i < ARRAY_SIZE-1; i++)
     {
         pass = (pu8[i] <= pu8[i+1]);
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     TEST_ASSERT_PASS(pass);
     Serial.print(end-start);
@@ -185,7 +189,7 @@ void loop(void)
     for (i = 0; i < ARRAY_SIZE-1; i++)
     {
         pass = (pu16[i] <= pu16[i+1]);
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     TEST_ASSERT_PASS(pass);
     Serial.print(end-start);
@@ -201,7 +205,7 @@ void loop(void)
     for (i = 0; i < ARRAY_SIZE-1; i++)
     {
         pass = (pu32[i] <= pu32[i+1]);
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     TEST_ASSERT_PASS(pass);
     Serial.print(end-start);
@@ -218,12 +222,15 @@ void loop(void)
     for (i = 0; i < ARRAY_SIZE-1; i++)
     {
         pass = (qs32[i] <= qs32[i+1]);
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     TEST_ASSERT_PASS(pass);
     Serial.print(end-start);
     Serial.println(F(" ms"));
     free(qs32);
+    
+    Serial.print("Test assertions: ");
+    Serial.println(TEST_ASSERT_COUNT());
 }
 
 

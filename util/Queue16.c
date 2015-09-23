@@ -21,6 +21,10 @@
  * buffer by clearing or setting the overwrite flag.  As a traditional queue, 
  * no further data can be added when it is full.  As a moving window, new data 
  * replaces the oldest data when the queue is full.
+ *
+ * Note that appropriate locking mechanisms must be used if these functions are
+ * used in interrupt service routines or by multiple threads.  The functions do
+ * not disable interrupts or use mutexes for thread safe access.
  */
  
 /******************************************************************************
@@ -125,12 +129,13 @@ int QUEUE16_Dequeue(QUEUE16* queue, uint16_t* pData)
 int QUEUE16_Enqueue(QUEUE16* queue, uint16_t data)
 {
     int added = 0;
-    uint16_t dummy;
     
     // Dequeue oldest data element if queue full and overwrite flag set.
     if (queue->overwrite && (queue->count == queue->size))
     {
-        QUEUE16_Dequeue(queue, &dummy);
+        queue->head++;
+        if (queue->head >= queue->size) queue->head -= queue->size;
+        queue->count--;
     }
     
     // Add element to tail.

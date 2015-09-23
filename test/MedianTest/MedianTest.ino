@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 09/22/2015 - Tom Kerr
+ * Use refactored aunit test functions.
+ *
  * 08/30/2015 - Tom Kerr
  * Initial creation.
  ******************************************************************************/
@@ -121,6 +124,7 @@ void setup(void)
 void loop(void)
 {   
     TEST_WAIT();
+    TEST_INIT();
     
     median_t m;
     uint8_t count;
@@ -133,8 +137,8 @@ void loop(void)
     for (int i = 0; i < MEDIAN_FILTER_SIZE; i++)
     {
         pass = false;
-        TEST_ASSERT_BREAK(MedianAdd(i) == ++count, i, 1);
-        TEST_ASSERT_BREAK(MedianCount() == count, i, 2);
+        TEST_ASSERT_BREAK1(MedianAdd(i) == ++count, i);
+        TEST_ASSERT_BREAK1(MedianCount() == count, i);
         pass = true;
     }
     TEST_ASSERT_PASS(pass);
@@ -155,8 +159,8 @@ void loop(void)
     for (int i = MEDIAN_FILTER_SIZE-1; i >= 0; i--)
     {
         pass = false;
-        TEST_ASSERT_BREAK(MedianAdd(i) == ++count, i, 1);
-        TEST_ASSERT_BREAK(MedianCount() == count, i, 2);
+        TEST_ASSERT_BREAK1(MedianAdd(i) == ++count, i);
+        TEST_ASSERT_BREAK1(MedianCount() == count, i);
         pass = true;
     }
     TEST_ASSERT_PASS(pass);
@@ -202,9 +206,12 @@ void loop(void)
         expected = MedianValue();
         calc = selectionSort();
         pass = (expected == calc);
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK1(pass, i);
     }
     TEST_ASSERT_PASS(pass);
+    
+    Serial.print("Test assertions: ");
+    Serial.println(TEST_ASSERT_COUNT());
 }
 
 

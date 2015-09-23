@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 09/22/2015 - Tom Kerr
+ * Use refactored aunit test functions.
+ *
  * 09/13/2015 - Tom Kerr
  * Initial creation.
  ******************************************************************************/
@@ -101,6 +104,7 @@ void loop(void)
     const uint16_t halfFull = QUEUE_SIZE / 2;
 
     TEST_WAIT();
+    TEST_INIT();
     
     // Queue with overwrite disabled.
     QUEUE16_Define(&testQueue, queueArray, QUEUE_SIZE, 0);
@@ -116,11 +120,11 @@ void loop(void)
     for (i = 1; i <= QUEUE_SIZE; i++)
     {
         cond = (QUEUE16_Enqueue(&testQueue, i) == 1);
-        TEST_ASSERT_BREAK(cond, i, 1);
+        TEST_ASSERT_BREAK2(cond, i, 1);
         cond = (QUEUE16_Count(&testQueue) == i);
-        TEST_ASSERT_BREAK(cond, i, 2);
+        TEST_ASSERT_BREAK2(cond, i, 2);
         cond = (QUEUE16_Available(&testQueue) == QUEUE_SIZE - i);
-        TEST_ASSERT_BREAK(cond, i, 3);
+        TEST_ASSERT_BREAK2(cond, i, 3);
     }
     TEST_ASSERT_PASS(cond);
     
@@ -137,13 +141,13 @@ void loop(void)
     for (i = 1; i <= QUEUE_SIZE; i++)
     {
         cond = (QUEUE16_Dequeue(&testQueue, &j) == 1);
-        TEST_ASSERT_BREAK(cond, i, 1);
+        TEST_ASSERT_BREAK2(cond, i, 1);
         cond = (j == i);
-        TEST_ASSERT_BREAK(cond, i, 2);
+        TEST_ASSERT_BREAK2(cond, i, 2);
         cond = (QUEUE16_Count(&testQueue) == QUEUE_SIZE - i);
-        TEST_ASSERT_BREAK(cond, i, 3);
+        TEST_ASSERT_BREAK2(cond, i, 3);
         cond = (QUEUE16_Available(&testQueue) == i);
-        TEST_ASSERT_BREAK(cond, i, 4);
+        TEST_ASSERT_BREAK2(cond, i, 4);
     }
     TEST_ASSERT_PASS(cond);
     
@@ -161,30 +165,30 @@ void loop(void)
     for (i = 1; i <= QUEUE_SIZE; i++)
     {
         cond = (QUEUE16_Enqueue(&testQueue, i) == 1);
-        TEST_ASSERT_BREAK(cond, i, 1);
+        TEST_ASSERT_BREAK2(cond, i, 1);
         cond = (QUEUE16_Count(&testQueue) == i);
-        TEST_ASSERT_BREAK(cond, i, 2);
+        TEST_ASSERT_BREAK2(cond, i, 2);
         cond = (QUEUE16_Available(&testQueue) == QUEUE_SIZE - i);
-        TEST_ASSERT_BREAK(cond, i, 3);
+        TEST_ASSERT_BREAK2(cond, i, 3);
     }
     
     // Stream data through the queue.
     for (; i <= 50000u; i++)
     {
         cond = (QUEUE16_Dequeue(&testQueue, &j) == 1);
-        TEST_ASSERT_BREAK(cond, i, 4);
+        TEST_ASSERT_BREAK2(cond, i, 4);
         cond = (j == i - QUEUE_SIZE);
-        TEST_ASSERT_BREAK(cond, i, 5);
+        TEST_ASSERT_BREAK2(cond, i, 5);
         cond = (QUEUE16_Count(&testQueue) == QUEUE_SIZE - 1);
-        TEST_ASSERT_BREAK(cond, i, 6);
+        TEST_ASSERT_BREAK2(cond, i, 6);
         cond = (QUEUE16_Available(&testQueue) == 1);
-        TEST_ASSERT_BREAK(cond, i, 7);
+        TEST_ASSERT_BREAK2(cond, i, 7);
         cond = (QUEUE16_Enqueue(&testQueue, i) == 1);
-        TEST_ASSERT_BREAK(cond, i, 8);
+        TEST_ASSERT_BREAK2(cond, i, 8);
         cond = (QUEUE16_Count(&testQueue) == QUEUE_SIZE);
-        TEST_ASSERT_BREAK(cond, i, 9);
+        TEST_ASSERT_BREAK2(cond, i, 9);
         cond = (QUEUE16_Available(&testQueue) == 0);
-        TEST_ASSERT_BREAK(cond, i, 10);
+        TEST_ASSERT_BREAK2(cond, i, 10);
     }
     TEST_ASSERT_PASS(cond);
     
@@ -196,30 +200,30 @@ void loop(void)
     for (i = 1; i <= halfFull; i++)
     {
         cond = (QUEUE16_Enqueue(&testQueue, i) == 1);
-        TEST_ASSERT_BREAK(cond, i, 1);
+        TEST_ASSERT_BREAK2(cond, i, 1);
         cond = (QUEUE16_Count(&testQueue) == i);
-        TEST_ASSERT_BREAK(cond, i, 2);
+        TEST_ASSERT_BREAK2(cond, i, 2);
         cond = (QUEUE16_Available(&testQueue) == QUEUE_SIZE - i);
-        TEST_ASSERT_BREAK(cond, i, 3);
+        TEST_ASSERT_BREAK2(cond, i, 3);
     }
     
     // Stream data through the queue.
     for (; i <= 50000u; i++)
     {
         cond = (QUEUE16_Dequeue(&testQueue, &j) == 1);
-        TEST_ASSERT_BREAK(cond, i, 4);
+        TEST_ASSERT_BREAK2(cond, i, 4);
         cond = (j == i - halfFull);
-        TEST_ASSERT_BREAK(cond, i, 5);
+        TEST_ASSERT_BREAK2(cond, i, 5);
         cond = (QUEUE16_Count(&testQueue) == halfFull - 1);
-        TEST_ASSERT_BREAK(cond, i, 6);
+        TEST_ASSERT_BREAK2(cond, i, 6);
         cond = (QUEUE16_Available(&testQueue) == QUEUE_SIZE - (halfFull - 1));
-        TEST_ASSERT_BREAK(cond, i, 7);
+        TEST_ASSERT_BREAK2(cond, i, 7);
         cond = (QUEUE16_Enqueue(&testQueue, i) == 1);
-        TEST_ASSERT_BREAK(cond, i, 8);
+        TEST_ASSERT_BREAK2(cond, i, 8);
         cond = (QUEUE16_Count(&testQueue) == halfFull);
-        TEST_ASSERT_BREAK(cond, i, 9);
+        TEST_ASSERT_BREAK2(cond, i, 9);
         cond = (QUEUE16_Available(&testQueue) == QUEUE_SIZE - halfFull);
-        TEST_ASSERT_BREAK(cond, i, 10);
+        TEST_ASSERT_BREAK2(cond, i, 10);
     }
     TEST_ASSERT_PASS(cond);
     
@@ -233,28 +237,28 @@ void loop(void)
         for (j = i - 1; j < QUEUE_SIZE; j++)
         {
             cond = (QUEUE16_Peek(&testQueue, j, &k) == 0);
-            TEST_ASSERT_BREAK(cond, i, 100 + j);
+            TEST_ASSERT_BREAK2(cond, i, 100 + j);
         }
         if (!cond) break;
         
         cond = (QUEUE16_Enqueue(&testQueue, i) == 1);
-        TEST_ASSERT_BREAK(cond, i, 2);
+        TEST_ASSERT_BREAK2(cond, i, 2);
         cond = (QUEUE16_Count(&testQueue) == i);
-        TEST_ASSERT_BREAK(cond, i, 3);
+        TEST_ASSERT_BREAK2(cond, i, 3);
         cond = (QUEUE16_Available(&testQueue) == QUEUE_SIZE - i);
-        TEST_ASSERT_BREAK(cond, i, 4);
+        TEST_ASSERT_BREAK2(cond, i, 4);
         
         // Peek index is valid.
         for (j = 0; j < i; j++)
         {
             cond = (QUEUE16_Peek(&testQueue, j, &k) == 1);
-            TEST_ASSERT_BREAK(cond, i, 200 + j);
+            TEST_ASSERT_BREAK2(cond, i, 200 + j);
             cond = (k == j + 1);
-            TEST_ASSERT_BREAK(cond, i, 300 + j);
+            TEST_ASSERT_BREAK2(cond, i, 300 + j);
             cond = (QUEUE16_Count(&testQueue) == i);
-            TEST_ASSERT_BREAK(cond, i, 400 + j);
+            TEST_ASSERT_BREAK2(cond, i, 400 + j);
             cond = (QUEUE16_Available(&testQueue) == QUEUE_SIZE - i);
-            TEST_ASSERT_BREAK(cond, i, 500 + j);
+            TEST_ASSERT_BREAK2(cond, i, 500 + j);
         }
         if (!cond) break;
     }
@@ -263,18 +267,18 @@ void loop(void)
     // Test the peek functionality #2.
     // Remove two data elements and make sure the peek index still works properly.
     TEST_NUMBER(9);
-    TEST_ASSERT_FAIL((QUEUE16_Dequeue(&testQueue, &j) == 1), 1, 1);  // Data element = 1
-    TEST_ASSERT_FAIL((QUEUE16_Dequeue(&testQueue, &j) == 1), 1, 2);  // Data element = 2
+    TEST_ASSERT_FAIL1((QUEUE16_Dequeue(&testQueue, &j) == 1), 1);  // Data element = 1
+    TEST_ASSERT_FAIL1((QUEUE16_Dequeue(&testQueue, &j) == 1), 2);  // Data element = 2
     for (i = 0; i < QUEUE_SIZE - 2; i++)
     {
         cond = (QUEUE16_Peek(&testQueue, (uint8_t)i, &j) == 1);
-        TEST_ASSERT_BREAK(cond, i, 3);
+        TEST_ASSERT_BREAK2(cond, i, 3);
         cond = (j == i + 3);  // Data element should start with 3
-        TEST_ASSERT_BREAK(cond, i, 4);
+        TEST_ASSERT_BREAK2(cond, i, 4);
         cond = (QUEUE16_Count(&testQueue) == QUEUE_SIZE - 2);
-        TEST_ASSERT_BREAK(cond, i, 5);
+        TEST_ASSERT_BREAK2(cond, i, 5);
         cond = (QUEUE16_Available(&testQueue) == 2);
-        TEST_ASSERT_BREAK(cond, i, 6);
+        TEST_ASSERT_BREAK2(cond, i, 6);
     }
     TEST_ASSERT_PASS(cond);
     
@@ -288,11 +292,11 @@ void loop(void)
     for (i = 1; i <= QUEUE_SIZE; i++)
     {
         cond = (QUEUE16_Enqueue(&testQueue, i) == 1);
-        TEST_ASSERT_BREAK(cond, i, 1);
+        TEST_ASSERT_BREAK2(cond, i, 1);
         cond = (QUEUE16_Count(&testQueue) == i);
-        TEST_ASSERT_BREAK(cond, i, 2);
+        TEST_ASSERT_BREAK2(cond, i, 2);
         cond = (QUEUE16_Available(&testQueue) == QUEUE_SIZE - i);
-        TEST_ASSERT_BREAK(cond, i, 3);
+        TEST_ASSERT_BREAK2(cond, i, 3);
     }
     
     // Stream data through the queue without dequeueing anything.
@@ -302,20 +306,23 @@ void loop(void)
         for (j = 0; j < QUEUE_SIZE; j++)
         {
             cond = (QUEUE16_Peek(&testQueue, j, &k) == 1);
-            TEST_ASSERT_BREAK(cond, i, 100 + j);
+            TEST_ASSERT_BREAK2(cond, i, 100 + j);
             cond = (k = i + j - QUEUE_SIZE);
-            TEST_ASSERT_BREAK(cond, i, 200 + j);
+            TEST_ASSERT_BREAK2(cond, i, 200 + j);
         }
         if (!cond) break;
         
         cond = (QUEUE16_Enqueue(&testQueue, i) == 1);  // Enqueue should succeed
-        TEST_ASSERT_BREAK(cond, i, 4);
+        TEST_ASSERT_BREAK2(cond, i, 4);
         cond = (QUEUE16_Count(&testQueue) == QUEUE_SIZE);
-        TEST_ASSERT_BREAK(cond, i, 5);
+        TEST_ASSERT_BREAK2(cond, i, 5);
         cond = (QUEUE16_Available(&testQueue) == 0);
-        TEST_ASSERT_BREAK(cond, i, 6);
+        TEST_ASSERT_BREAK2(cond, i, 6);
     }
     TEST_ASSERT_PASS(cond);
+    
+    Serial.print("Test assertions: ");
+    Serial.println(TEST_ASSERT_COUNT());
 }
 
 

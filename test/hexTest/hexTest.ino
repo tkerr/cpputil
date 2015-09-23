@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 09/22/2015 - Tom Kerr
+ * Use refactored aunit test functions.
+ *
  * 08/29/2015 - Tom Kerr
  * Modified to use aunit test structure.
  * Moved some strings to PROGMEM.
@@ -159,7 +162,7 @@ void Test_HEX_Uint8ToHex()
         ClearTestResult();
         HEX_Uint8ToHex(testVectorsBinary[i], testResultAscii);
         pass = CheckString(testVectorsAscii[i], testResultAscii, 2*sizeof(uint8_t));
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     if (!pass) PrintErrorAscii(testVectorsAscii[i], testResultAscii);
     TEST_ASSERT_PASS(pass);
@@ -181,7 +184,7 @@ void Test_HEX_Uint16ToHex()
     ClearTestResult();
     HEX_Uint16ToHex(0xABCDu, testResultAscii);
     pass = CheckString(testAsc, testResultAscii, 2*sizeof(uint16_t));
-    TEST_ASSERT_FAIL(pass, 1, 0);
+    TEST_ASSERT_FAIL(pass);
     if (!pass)
     {
         PrintErrorAscii(testAsc, testResultAscii);
@@ -202,7 +205,7 @@ void Test_HEX_Uint16ToHex()
         HEX_Uint16ToHex(testNum.v, testResultAscii);
         
         pass = CheckString(expected, testResultAscii, 2*sizeof(uint16_t));
-        TEST_ASSERT_BREAK(pass, testNum.v, 1);
+        TEST_ASSERT_BREAK2(pass, testNum.v, 1);
     }
     if (!pass) PrintErrorAscii(expected, testResultAscii);
     TEST_ASSERT_PASS(pass);
@@ -224,7 +227,7 @@ void Test_HEX_Uint32ToHex()
     ClearTestResult();
     HEX_Uint32ToHex(0x01234567ul, testResultAscii);
     pass = CheckString(testAsc, testResultAscii, 2*sizeof(uint32_t));
-    TEST_ASSERT_FAIL(pass, 1, 0);
+    TEST_ASSERT_FAIL(pass);
     if (!pass)
     {
         PrintErrorAscii(testAsc, testResultAscii);
@@ -252,7 +255,7 @@ void Test_HEX_Uint32ToHex()
         ClearTestResult();
         HEX_Uint32ToHex(testNum.v, testResultAscii);
         pass = CheckString(expected, testResultAscii, 2*sizeof(uint32_t));
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     if (!pass) PrintErrorAscii(expected, testResultAscii);
     TEST_ASSERT_PASS(pass);
@@ -274,7 +277,7 @@ void Test_HEX_Uint64ToHex()
     ClearTestResult();
     HEX_Uint64ToHex(0x0123456789ABCDEFull, testResultAscii);
     pass = CheckString(testAsc, testResultAscii, 2*sizeof(uint64_t));
-    TEST_ASSERT_FAIL(pass, 1, 0);
+    TEST_ASSERT_FAIL(pass);
     if (!pass)
     {
         PrintErrorAscii(testAsc, testResultAscii);
@@ -311,7 +314,7 @@ void Test_HEX_Uint64ToHex()
         HEX_Uint64ToHex(testNum.v, testResultAscii);
         
         pass = CheckString(expected, testResultAscii, 2*sizeof(uint64_t));
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     if (!pass) PrintErrorAscii(expected, testResultAscii);
     TEST_ASSERT_PASS(pass);
@@ -331,7 +334,7 @@ void Test_HEX_HexToUint8()
     {
         actual = HEX_HexToUint8(testVectorsAscii[i]);
         pass = (actual == testVectorsBinary[i]);
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     if (!pass) PrintErrorBinary(testVectorsBinary[i], actual);
     TEST_ASSERT_PASS(pass);
@@ -353,7 +356,7 @@ void Test_HEX_HexToUint16()
     testNum = 0xABCDu;
     actual = HEX_HexToUint16(testAsc);
     pass = (actual == testNum);
-    TEST_ASSERT_FAIL(pass, 1, 0);
+    TEST_ASSERT_FAIL(pass);
     if (!pass)
     {
         PrintErrorBinary(testNum, actual);
@@ -370,7 +373,7 @@ void Test_HEX_HexToUint16()
         // Perform the test conversion.
         actual = HEX_HexToUint16(testAsc);
         pass = (actual == testNum);
-        TEST_ASSERT_BREAK(pass, testNum, 1);
+        TEST_ASSERT_BREAK2(pass, testNum, 1);
     }
     if (!pass) PrintErrorBinary(testNum, actual);
     TEST_ASSERT_PASS(pass);
@@ -392,7 +395,7 @@ void Test_HEX_HexToUint32()
     testNum.v = 0x87654321ul;
     actual = HEX_HexToUint32(testAsc);
     pass = (actual == testNum.v);
-    TEST_ASSERT_FAIL(pass, 1, 0);
+    TEST_ASSERT_FAIL(pass);
     if (!pass)
     {
         PrintErrorBinary(testNum.v, actual);
@@ -414,7 +417,7 @@ void Test_HEX_HexToUint32()
         // Perform the test conversion.
         actual = HEX_HexToUint32(testAsc);
         pass = (actual == testNum.v);
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     if (!pass) PrintErrorBinary(testNum.v, actual);
     TEST_ASSERT_PASS(pass);
@@ -436,7 +439,7 @@ void Test_HEX_HexToUint64()
     testNum.v = 0xFEDCBA9876543210ull;
     actual = HEX_HexToUint64(testAsc);
     pass = (actual == testNum.v);
-    TEST_ASSERT_FAIL(pass, 1, 0);
+    TEST_ASSERT_FAIL(pass);
     if (!pass)
     {
         PrintErrorBinary(testNum.v, actual);
@@ -461,7 +464,7 @@ void Test_HEX_HexToUint64()
         // Perform the test conversion.
         actual = HEX_HexToUint64(testAsc);
         pass = (actual == testNum.v);
-        TEST_ASSERT_BREAK(pass, i, 1);
+        TEST_ASSERT_BREAK2(pass, i, 1);
     }
     if (!pass) PrintErrorBinary(testNum.v, actual);
     TEST_ASSERT_PASS(pass);
@@ -483,6 +486,7 @@ void setup()
 void loop()
 {
     TEST_WAIT();
+    TEST_INIT();
     
     Test_HEX_Uint8ToHex();
     Test_HEX_Uint16ToHex();
@@ -492,4 +496,7 @@ void loop()
     Test_HEX_HexToUint16();
     Test_HEX_HexToUint32();
     Test_HEX_HexToUint64();
+    
+    Serial.print("Test assertions: ");
+    Serial.println(TEST_ASSERT_COUNT());
 }

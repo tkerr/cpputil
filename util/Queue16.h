@@ -21,6 +21,10 @@
  * buffer by clearing or setting the overwrite flag.  As a traditional queue, 
  * no further data can be added when it is full.  As a moving window, new data 
  * replaces the oldest data when the queue is full.
+ *
+ * Note that appropriate locking mechanisms must be used if these functions are
+ * used in interrupt service routines or by multiple threads.  The functions do
+ * not disable interrupts or use mutexes for thread safe access.
  */
 
 #ifndef _QUEUE16_H
