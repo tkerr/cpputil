@@ -197,7 +197,6 @@ int QUEUE_DequeuePtr(QUEUE* queue)
     // Remove data element from head.
     if (queue->count > 0)
     {
-        ptr = queue->head;
         queue->head += queue->size;
         if (queue->head >= queue->end) queue->head = queue->base;
         queue->count--;
