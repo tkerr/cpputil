@@ -7,6 +7,9 @@
  *
  * Modification History:
  *
+ * 10/04/2015 - Tom Kerr
+ * Added TEST_DONE().
+ *
  * 09/22/2015 - Tom Kerr
  * Refactored.  Fail messages can now print source file line numbers.
  * Renamed most functions and added a corresponding macro to automatically
@@ -204,6 +207,14 @@ void TEST_NUMBER(uint16_t num)
     Serial.print(F(": "));
 }
 
+
+/**************************************
+ * TEST_DONE
+ **************************************/
+void TEST_DONE()
+{
+	Serial.println(F("TEST DONE"));
+}
 
 /******************************************************************************
  * Private functions.

@@ -7,6 +7,9 @@
  *
  * Modification History:
  *
+ * 10/04/2015 - Tom Kerr
+ * Added TEST_DONE().
+ *
  * 09/22/2015 - Tom Kerr
  * Refactored.  Fail messages can now print source file line numbers.
  * Renamed most functions and added a corresponding macro to automatically
@@ -242,6 +245,16 @@ void TEST_WAIT();
  * @param num The test number to print.
  */
 void TEST_NUMBER(uint16_t num);
+
+
+/**
+ * @brief
+ * Prints a TEST DONE message. 
+ *
+ * Intended for use by automated test tools so they can detect when a unit
+ * test is complete.
+ */
+void TEST_DONE();
 
 
 #endif // _AUNIT_H
