@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 10/07/2015 - Tom Kerr
+ * Added support for automated unit testing over a serial port.
+ *
  * 08/30/2015 - Tom Kerr
  * Initial creation.
  ******************************************************************************/
@@ -117,6 +120,7 @@ void loop(void)
     uint32_t stop;
 
     TEST_WAIT();
+    TEST_FILE();
     
     TEST_NUMBER(1);
     Serial.println(F(CRC_NAME));
@@ -163,6 +167,8 @@ void loop(void)
     Serial.print(F("Fast: "));
     Serial.print(stop-start);
     Serial.println(F(" ms"));
+    
+    TEST_DONE();
 }
 
 

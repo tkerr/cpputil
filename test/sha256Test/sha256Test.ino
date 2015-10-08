@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 10/07/2015 - Tom Kerr
+ * Added support for automated unit testing over a serial port.
+ *
  * 08/29/2015 - Tom Kerr
  * Moved some strings to PROGMEM.
  *
@@ -58,6 +61,7 @@
  * Local include files.
  ******************************************************************************/
 #include "sha256.h"
+#include "aunit.h"
 
 /******************************************************************************
  * Forward references.
@@ -116,6 +120,10 @@ void loop()
 {
 	SHA256_CTX ctx;
 	uint32_t start, stop;
+    
+    TEST_WAIT();
+    TEST_INIT();
+    TEST_FILE();
 	
 	char text1[] = "";
     char text2[] = "abc";
@@ -123,11 +131,6 @@ void loop()
     char text4[] = "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";
     char text5[] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     uint8_t hash[32];
-	
-	Serial.print(F("Press a key to begin: "));
-	while (!Serial.available()) {}
-    Serial.read();
-	Serial.println();
 	
 	// Hash one
     Serial.print(F("Text: "));
@@ -191,4 +194,6 @@ void loop()
     print_hash(hash);
     Serial.print(stop-start);
     Serial.println(F(" ms"));
+    
+    TEST_DONE();
 }

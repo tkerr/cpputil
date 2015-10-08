@@ -16,6 +16,9 @@
 #######################
 # Modification History:
 #
+# 10/07/2015 - Tom Kerr
+# Added support for automated unit test with targets clean, clobber, install, test.
+#
 # 09/30/2015 - Tom Kerr
 # Created.
 ##############################################################################
@@ -41,6 +44,7 @@ TARGET = $(PROJECT)_$(CPU_TARGET)_$(VARIANT)
 # Absolute paths to base directories.
 TOOL_BASE  = C:/tools/arduino-1.6.5-r2/hardware
 WITAQ_BASE = C:/dev/WiTAQ/Arduino
+PY_BASE    = C:/dev/WiTAQ/pyutil
 
 # Serial port for install target.
 ifndef SERIAL
@@ -122,11 +126,11 @@ clean:
 	rm -rf *.o *.d *.elf *.eep
 	
 clobber : clean
-	rm -rf *.hex *.map *.lst
+	rm -rf *.hex *.map *.lst *_log.txt
 	
 install: $(TARGET).hex
 	$(IN) -C$(AVRDUDE_CONFIG) -v -p$(CPU_TARGET) -carduino -P$(SERIAL) -b115200 -D -Uflash:w:$(TARGET).hex:i
 	
 test: install
-	putty -serial $(SERIAL)
+	python $(PY_BASE)/SerialTestRunner/SerialTestRunner.py -v -o $(PROJECT)_log.txt $(SERIAL) $(PROJECT)_params.json
 	

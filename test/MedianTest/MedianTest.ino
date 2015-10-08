@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 10/07/2015 - Tom Kerr
+ * Added support for automated unit testing over a serial port.
+ *
  * 09/22/2015 - Tom Kerr
  * Use refactored aunit test functions.
  *
@@ -125,6 +128,7 @@ void loop(void)
 {   
     TEST_WAIT();
     TEST_INIT();
+    TEST_FILE();
     
     median_t m;
     uint8_t count;
@@ -212,6 +216,8 @@ void loop(void)
     
     Serial.print("Test assertions: ");
     Serial.println(TEST_ASSERT_COUNT());
+    
+    TEST_DONE();
 }
 
 

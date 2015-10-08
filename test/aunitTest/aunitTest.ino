@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 10/07/2015 - Tom Kerr
+ * Added support for automated unit testing over a serial port.
+ *
  * 09/22/2015 - Tom Kerr
  * Created.
  ******************************************************************************/
@@ -232,6 +235,8 @@ void loop(void)
     TEST_ASSERT_FAIL_L((TEST_ASSERT_COUNT() == i++), __LINE__);
     TEST_ASSERT_FAIL1_L((TEST_ASSERT_COUNT() == i++), 1, __LINE__);
     TEST_ASSERT_FAIL2_L((TEST_ASSERT_COUNT() == i++), 1, 2, __LINE__);
+    
+    TEST_DONE();
 }
     
 /******************************************************************************

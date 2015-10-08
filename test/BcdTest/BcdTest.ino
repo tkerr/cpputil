@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 10/07/2015 - Tom Kerr
+ * Added support for automated unit testing over a serial port.
+ *
  * 09/22/2015 - Tom Kerr
  * Use refactored aunit test functions.
  *
@@ -208,10 +211,13 @@ void setup(void)
 void loop(void)
 {
     TEST_WAIT();
+    TEST_FILE();
     
     Test_BCD_ByteToBcd();
     Test_BCD_BcdToByte();
     Test_ByteToBcdToAscii();
+    
+    TEST_DONE();
 }
 
 

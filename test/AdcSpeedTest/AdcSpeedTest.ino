@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 10/07/2015 - Tom Kerr
+ * Added support for automated unit testing over a serial port.
+ *
  * 09/12/2015 - Tom Kerr
  * Initial creation.
  ******************************************************************************/
@@ -101,31 +104,29 @@ void loop()
     uint32_t num_conversions = 65536;
     
     TEST_WAIT();
+    TEST_FILE();
     
-    while (!Serial.available())
+    // Perform a bunch of conversions.
+    Serial.println(F("Converting, press a key to end test..."));
+    uint32_t start = millis();
+    for (uint32_t i = 0; i < num_conversions; i++)
     {
-        // Perform a bunch of conversions.
-        Serial.println(F("Converting, press a key to end test..."));
-        uint32_t start = millis();
-        for (uint32_t i = 0; i < num_conversions; i++)
-        {
-            val = myAdc.convert();
-        }
-        uint32_t end = millis();
-        uint32_t delta = end - start;
-    
-        // Print the ADC result so that it isn't optimized out.
-        Serial.print(F("ADC value: "));
-        Serial.println(val);
-    
-        // Print test results.
-        Serial.print(F("Num conversions: "));
-        Serial.println(num_conversions);
-        Serial.print(F("Total time (ms): "));
-        Serial.println(delta);
-        Serial.print(F("Average time (us): "));
-        Serial.println(delta*1000/num_conversions);
+        val = myAdc.convert();
     }
+    uint32_t end = millis();
+    uint32_t delta = end - start;
     
-    Serial.read();
+    // Print the ADC result so that it isn't optimized out.
+    Serial.print(F("ADC value: "));
+    Serial.println(val);
+    
+    // Print test results.
+    Serial.print(F("Num conversions: "));
+    Serial.println(num_conversions);
+    Serial.print(F("Total time (ms): "));
+    Serial.println(delta);
+    Serial.print(F("Average time (us): "));
+    Serial.println(delta*1000/num_conversions);
+    
+    TEST_DONE();
 }

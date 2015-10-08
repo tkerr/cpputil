@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 10/07/2015 - Tom Kerr
+ * Added support for automated unit testing over a serial port.
+ *
  * 09/16/2015 - Tom Kerr
  * Initial creation.
  ******************************************************************************/
@@ -617,6 +620,8 @@ void loop(void)
 Done:
     Serial.print("Test assertion count: ");
     Serial.println(TEST_ASSERT_COUNT());
+    
+    TEST_DONE();
 }
 
 

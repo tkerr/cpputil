@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 10/07/2015 - Tom Kerr
+ * Added support for automated unit testing over a serial port.
+ *
  * 09/22/2015 - Tom Kerr
  * Use refactored aunit test functions.
  *
@@ -487,6 +490,7 @@ void loop()
 {
     TEST_WAIT();
     TEST_INIT();
+    TEST_FILE();
     
     Test_HEX_Uint8ToHex();
     Test_HEX_Uint16ToHex();
@@ -499,4 +503,6 @@ void loop()
     
     Serial.print("Test assertions: ");
     Serial.println(TEST_ASSERT_COUNT());
+    
+    TEST_DONE();
 }

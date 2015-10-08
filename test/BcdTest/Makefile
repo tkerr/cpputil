@@ -14,6 +14,9 @@
 #######################
 # Modification History:
 #
+# 10/07/2015 - Tom Kerr
+# Added support for automated unit test with targets clean, clobber, install, test.
+#
 # 09/22/2015 - Tom Kerr
 # Created.
 ##############################################################################
@@ -39,6 +42,12 @@ TARGET = $(PROJECT)_$(CPU_TARGET)_$(VARIANT)
 # Absolute paths to base directories.
 TOOL_BASE  = C:/tools/arduino-1.6.5-r2/hardware
 WITAQ_BASE = C:/dev/WiTAQ/Arduino
+PY_BASE    = C:/dev/WiTAQ/pyutil
+
+# Serial port for install target.
+ifndef SERIAL
+SERIAL = COM10
+endif
 
 # Toolset definition.
 BIN = $(TOOL_BASE)/tools/avr/bin
@@ -48,6 +57,7 @@ CC = $(BIN)/avr-gcc.exe
 LD = $(BIN)/avr-gcc.exe
 OC = $(BIN)/avr-objcopy.exe
 SZ = $(BIN)/avr-size.exe
+IN = $(BIN)/avrdude.exe
 
 # Source file paths.
 VPATH = ../../util ../../Arduino ../../Arduino/aunit
@@ -66,6 +76,9 @@ LD_ALIB = $(WITAQ_BASE)/alib/lib_arduino_$(CPU_TARGET)_$(VARIANT).a
 # Custom libraries
 LD_LIB_WITAQ = $(WITAQ_BASE)/lib_witaq/lib_witaq_$(CPU_TARGET)_$(VARIANT).a
 
+# AVRDude configuration.
+AVRDUDE_CONFIG = $(TOOL_BASE)/tools/avr/etc/avrdude.conf
+
 # Toolset flags.
 CFLAGS   = -c -g -Os -Wall -fno-exceptions -ffunction-sections -fdata-sections -MMD -mmcu=$(CPU_TARGET) \
 	-DF_CPU=$(F_CPU) -DARDUINO=$(ARDUINO_REV) -D$(CPU_TARGET) -D$(BOARD) -D$(ARCH)
@@ -80,6 +93,9 @@ OBJS = \
    BcdTest.o \
    Bcd.o \
    aunit.o 
+   
+# Always remake these targets.
+.PHONY: clean clobber install
 
 # The primary target is the hex file.
 all : echotarget $(TARGET).hex
@@ -104,9 +120,14 @@ $(TARGET).elf : $(OBJS)
 %.o : %.ino
 	$(CC) $(CFLAGS) $(CCFLAGS) $(INOFLAGS) $(INC) -Wa,-ahls=$(basename $@).lst -o $@ $<
 	
-clobber : clean
-	rm -rf *.hex *.map *.lst
-	
 clean:
 	rm -rf *.o *.d *.elf *.eep
 	
+clobber : clean
+	rm -rf *.hex *.map *.lst *_log.txt
+	
+install: $(TARGET).hex
+	$(IN) -C$(AVRDUDE_CONFIG) -v -p$(CPU_TARGET) -carduino -P$(SERIAL) -b115200 -D -Uflash:w:$(TARGET).hex:i
+	
+test: install
+	python $(PY_BASE)/SerialTestRunner/SerialTestRunner.py -v -o $(PROJECT)_log.txt $(SERIAL) $(PROJECT)_params.json

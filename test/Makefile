@@ -11,6 +11,9 @@
 #######################
 # Modification History:
 #
+# 10/07/2015 - Tom Kerr
+# Added pcgTest.
+#
 # 09/24/2015 - Tom Kerr
 # Created.
 ##############################################################################
@@ -24,6 +27,7 @@ SUBDIRS = \
 	FifoTest \
 	hexTest \
 	MedianTest \
+    pcgTest \
 	Queue16Test \
 	QueueTest \
 	sha256Test \

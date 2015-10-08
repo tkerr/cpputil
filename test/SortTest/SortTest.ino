@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 10/07/2015 - Tom Kerr
+ * Added support for automated unit testing over a serial port.
+ *
  * 09/22/2015 - Tom Kerr
  * Use refactored aunit test functions.
  *
@@ -115,6 +118,7 @@ void loop(void)
     
     TEST_WAIT();
     TEST_INIT();
+    TEST_FILE();
     
     TEST_NUMBER(1);
     int8_t* pi8 = (int8_t*) malloc(ARRAY_SIZE * sizeof(int8_t));
@@ -231,6 +235,8 @@ void loop(void)
     
     Serial.print("Test assertions: ");
     Serial.println(TEST_ASSERT_COUNT());
+    
+    TEST_DONE();
 }
 
 

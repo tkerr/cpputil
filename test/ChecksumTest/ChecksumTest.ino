@@ -17,6 +17,9 @@
  *
  * Modification History:
  *
+ * 10/07/2015 - Tom Kerr
+ * Added support for automated unit testing over a serial port.
+ *
  * 09/22/2015 - Tom Kerr
  * Use refactored aunit test functions.
  *
@@ -114,6 +117,7 @@ void loop(void)
     bool cond;
     
     TEST_WAIT();
+    TEST_FILE();
     
     TEST_NUMBER(1);
     cond =  TEST_ASSERT_FAIL((checksum(testData1, 15) == cksm1));
@@ -131,6 +135,8 @@ void loop(void)
     testData2[16] = cksm3;
     cond &= TEST_ASSERT_FAIL((ipv4_checksum(testData2, 17*sizeof(uint16_t)) == 0));
     TEST_ASSERT_PASS(cond);
+    
+    TEST_DONE();
 }
 
 
