@@ -26,12 +26,13 @@ SUBDIRS = \
 	crcTest \
 	FifoTest \
 	hexTest \
-	MedianTest \
+    MedianTest \
     pcgTest \
 	Queue16Test \
 	QueueTest \
 	sha256Test \
-	SortTest 
+	SortTest \
+    uECCTest
 
 .PHONY: $(SUBDIRS) recurse
 

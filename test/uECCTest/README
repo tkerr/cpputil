@@ -1,0 +1,13 @@
+uECC.c module test program for the Arduino hardware platform.
+Uses the aunit pseudo test framework to execute the tests.
+Tested only on the Arduino Uno.
+
+Copy the following files into the sketch folder:
+uECC.c
+uECC.h
+Hex.c
+Hex.h
+pcg_basic.c
+pcg_basic.h
+aunit.cpp
+aunit.h

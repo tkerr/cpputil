@@ -29,3 +29,10 @@
 
 # Doxygen output
 doxygen/*
+
+# (Temporarily) ignore certain directories
+test/crcTest/crc-orig/
+util/micro-ecc/
+util/pcg-c/
+util/pcg-c-basic/pcg-c-basic-master
+
