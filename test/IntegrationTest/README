@@ -1,0 +1,10 @@
+Integration.c module test program for the Arduino hardware platform.
+Uses the aunit pseudo test framework to execute the tests.
+Tested only on the Arduino Uno.
+
+Copy the following files into the sketch folder:
+Integration.c
+Integration.h
+aunit.cpp
+aunit.h
+
