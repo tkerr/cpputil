@@ -11,6 +11,9 @@
 #######################
 # Modification History:
 #
+# 12/05/2015 - Tom Kerr
+# Added IntegrationTest.
+#
 # 10/07/2015 - Tom Kerr
 # Added pcgTest.
 #
@@ -26,6 +29,7 @@ SUBDIRS = \
 	crcTest \
 	FifoTest \
 	hexTest \
+    IntegrationTest \
     MedianTest \
     pcgTest \
 	Queue16Test \
